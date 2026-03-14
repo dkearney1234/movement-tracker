@@ -21,95 +21,107 @@ st.set_page_config(
 CUSTOM_CSS = """
 <style>
     :root {
-        --bg: #f6f7fb;
-        --panel: #ffffff;
-        --panel-soft: rgba(255,255,255,0.72);
-        --text: #1f2430;
-        --muted: #6c7486;
-        --accent: #7b8cff;
-        --accent-2: #a78bfa;
-        --success: #8fd6a6;
-        --success-deep: #2f7a4b;
-        --border: rgba(25, 28, 38, 0.08);
-        --shadow: 0 10px 30px rgba(44, 55, 90, 0.08);
-        --radius-xl: 24px;
-        --radius-lg: 18px;
-        --radius-md: 14px;
+        --bg: #131415;
+        --bg-2: #0f1814;
+        --panel: rgba(41, 40, 41, 0.94);
+        --panel-2: rgba(19, 20, 21, 0.96);
+        --panel-soft: rgba(254, 255, 255, 0.04);
+        --text: #feffff;
+        --muted: rgba(254, 255, 255, 0.68);
+        --accent: #3aaf48;
+        --accent-2: #05462d;
+        --accent-red: #fa4d56;
+        --border: rgba(254, 255, 255, 0.08);
+        --shadow: 0 18px 40px rgba(0, 0, 0, 0.34);
+        --glow: 0 0 0 1px rgba(58, 175, 72, 0.06), 0 18px 40px rgba(0, 0, 0, 0.34);
+        --radius-xl: 26px;
+        --radius-lg: 20px;
+        --radius-md: 16px;
+    }
+
+    html, body, [class*="css"] {
+        color: var(--text);
     }
 
     .stApp {
         background:
-            radial-gradient(circle at top left, rgba(167,139,250,0.12), transparent 28%),
-            radial-gradient(circle at top right, rgba(123,140,255,0.14), transparent 24%),
-            linear-gradient(180deg, #f8f9fd 0%, #f3f5fb 100%);
+            radial-gradient(circle at top center, rgba(58, 175, 72, 0.24), transparent 26%),
+            radial-gradient(circle at 20% 10%, rgba(5, 70, 45, 0.52), transparent 28%),
+            linear-gradient(180deg, #16261d 0%, #131415 18%, #131415 100%);
         color: var(--text);
     }
 
     .block-container {
         max-width: 760px;
-        padding-top: 1.2rem;
+        padding-top: 5.2rem;
         padding-bottom: 6rem;
         padding-left: 1rem;
         padding-right: 1rem;
     }
 
-    h1, h2, h3 {
+    h1, h2, h3, p, label, span, div {
         color: var(--text);
-        letter-spacing: -0.02em;
     }
 
     .hero-card {
-        background: linear-gradient(135deg, rgba(123,140,255,0.95), rgba(167,139,250,0.92));
-        border-radius: 28px;
-        padding: 1.35rem 1.2rem;
-        color: white;
-        box-shadow: 0 18px 40px rgba(98, 105, 196, 0.24);
-        margin-bottom: 1rem;
+        background:
+            radial-gradient(circle at top center, rgba(58, 175, 72, 0.18), transparent 38%),
+            linear-gradient(180deg, rgba(5, 70, 45, 0.94) 0%, rgba(19, 20, 21, 0.98) 100%);
+        border: 1px solid rgba(254, 255, 255, 0.08);
+        border-radius: 30px;
+        padding: 1.4rem 1.2rem;
+        color: var(--text);
+        box-shadow: 0 20px 48px rgba(0, 0, 0, 0.36);
+        margin-bottom: 1.15rem;
     }
 
     .hero-eyebrow {
         font-size: 0.78rem;
-        opacity: 0.9;
-        letter-spacing: 0.08em;
+        color: rgba(254, 255, 255, 0.72);
+        letter-spacing: 0.1em;
         text-transform: uppercase;
-        margin-bottom: 0.35rem;
+        margin-bottom: 0.4rem;
+        font-weight: 700;
     }
 
     .hero-title {
-        font-size: 1.8rem;
-        font-weight: 700;
-        line-height: 1.1;
-        margin-bottom: 0.35rem;
+        font-size: 1.95rem;
+        font-weight: 800;
+        line-height: 1.06;
+        margin-bottom: 0.38rem;
+        color: var(--text);
     }
 
     .hero-subtitle {
         font-size: 0.98rem;
-        line-height: 1.45;
-        opacity: 0.96;
+        line-height: 1.5;
+        color: rgba(254, 255, 255, 0.8);
     }
 
     .section-label {
         font-size: 0.78rem;
-        color: var(--muted);
+        color: rgba(254, 255, 255, 0.58);
         text-transform: uppercase;
-        letter-spacing: 0.08em;
-        font-weight: 700;
-        margin: 1.1rem 0 0.6rem 0;
+        letter-spacing: 0.1em;
+        font-weight: 800;
+        margin: 1.1rem 0 0.7rem 0;
     }
 
     .goal-card {
-        background: rgba(255,255,255,0.82);
-        backdrop-filter: blur(8px);
+        background: linear-gradient(180deg, rgba(41, 40, 41, 0.96), rgba(19, 20, 21, 0.98));
         border: 1px solid var(--border);
         border-radius: var(--radius-xl);
         padding: 1rem;
         box-shadow: var(--shadow);
-        margin-bottom: 0.8rem;
+        margin-bottom: 0.85rem;
     }
 
     .goal-card.complete {
-        background: linear-gradient(180deg, rgba(143,214,166,0.28), rgba(255,255,255,0.95));
-        border: 1px solid rgba(47,122,75,0.15);
+        background:
+            radial-gradient(circle at top center, rgba(58, 175, 72, 0.16), transparent 48%),
+            linear-gradient(180deg, rgba(5, 70, 45, 0.92), rgba(19, 20, 21, 0.98));
+        border: 1px solid rgba(58, 175, 72, 0.24);
+        box-shadow: var(--glow);
     }
 
     .goal-top {
@@ -121,7 +133,7 @@ CUSTOM_CSS = """
     }
 
     .goal-name {
-        font-size: 1.02rem;
+        font-size: 1.04rem;
         font-weight: 700;
         color: var(--text);
     }
@@ -129,17 +141,19 @@ CUSTOM_CSS = """
     .goal-pill {
         display: inline-flex;
         align-items: center;
-        padding: 0.28rem 0.6rem;
+        padding: 0.32rem 0.68rem;
         border-radius: 999px;
         font-size: 0.74rem;
-        font-weight: 700;
-        background: rgba(123,140,255,0.12);
-        color: #5164db;
+        font-weight: 800;
+        background: rgba(254, 255, 255, 0.06);
+        color: rgba(254, 255, 255, 0.76);
+        border: 1px solid rgba(254, 255, 255, 0.06);
     }
 
     .goal-pill.complete {
-        background: rgba(47,122,75,0.13);
-        color: var(--success-deep);
+        background: rgba(58, 175, 72, 0.16);
+        color: #8ef6a0;
+        border: 1px solid rgba(58, 175, 72, 0.18);
     }
 
     .goal-metrics {
@@ -150,25 +164,25 @@ CUSTOM_CSS = """
     }
 
     .goal-number {
-        font-size: 1.6rem;
+        font-size: 1.7rem;
         font-weight: 800;
         line-height: 1;
+        color: var(--text);
     }
 
     .goal-target {
-        color: var(--muted);
+        color: rgba(254, 255, 255, 0.62);
         font-size: 0.92rem;
     }
 
     .goal-caption {
-        color: var(--muted);
+        color: rgba(254, 255, 255, 0.7);
         font-size: 0.86rem;
         margin-top: 0.45rem;
     }
 
     .planner-card {
-        background: rgba(255,255,255,0.86);
-        backdrop-filter: blur(8px);
+        background: linear-gradient(180deg, rgba(41, 40, 41, 0.96), rgba(19, 20, 21, 0.98));
         border: 1px solid var(--border);
         border-radius: 26px;
         padding: 1rem;
@@ -185,26 +199,27 @@ CUSTOM_CSS = """
 
     .planner-day {
         font-size: 1.1rem;
-        font-weight: 700;
+        font-weight: 800;
+        color: var(--text);
     }
 
     .planner-date {
-        color: var(--muted);
+        color: rgba(254, 255, 255, 0.62);
         font-size: 0.88rem;
     }
 
     .mini-chip {
         display: inline-block;
         font-size: 0.72rem;
-        font-weight: 700;
-        letter-spacing: 0.04em;
+        font-weight: 800;
+        letter-spacing: 0.05em;
         text-transform: uppercase;
-        color: var(--muted);
-        margin-bottom: 0.35rem;
+        color: rgba(254, 255, 255, 0.56);
+        margin-bottom: 0.4rem;
     }
 
     .summary-card {
-        background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(248,249,253,0.95));
+        background: linear-gradient(180deg, rgba(41, 40, 41, 0.96), rgba(19, 20, 21, 0.98));
         border: 1px solid var(--border);
         border-radius: 24px;
         padding: 1rem;
@@ -216,9 +231,10 @@ CUSTOM_CSS = """
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0.45rem 0;
-        border-bottom: 1px solid rgba(25, 28, 38, 0.06);
+        padding: 0.55rem 0;
+        border-bottom: 1px solid rgba(254, 255, 255, 0.06);
         font-size: 0.95rem;
+        color: var(--text);
     }
 
     .summary-line:last-child {
@@ -229,41 +245,62 @@ CUSTOM_CSS = """
         display: inline-flex;
         align-items: center;
         gap: 0.35rem;
-        padding: 0.3rem 0.6rem;
+        padding: 0.34rem 0.62rem;
         border-radius: 999px;
-        background: rgba(123,140,255,0.1);
-        color: #5164db;
+        background: rgba(58, 175, 72, 0.14);
+        color: #8ef6a0;
+        border: 1px solid rgba(58, 175, 72, 0.18);
         font-size: 0.75rem;
-        font-weight: 700;
+        font-weight: 800;
     }
 
     div[data-testid="stMetric"] {
-        background: rgba(255,255,255,0.82);
+        background: linear-gradient(180deg, rgba(41, 40, 41, 0.94), rgba(19, 20, 21, 0.98));
         border: 1px solid var(--border);
-        border-radius: 18px;
-        padding: 0.8rem;
+        border-radius: 20px;
+        padding: 0.85rem;
         box-shadow: var(--shadow);
+    }
+
+    div[data-testid="stMetric"] label,
+    div[data-testid="stMetric"] [data-testid="stMetricLabel"],
+    div[data-testid="stMetric"] [data-testid="stMetricValue"] {
+        color: var(--text) !important;
+    }
+
+    div[data-testid="stProgressBar"] {
+        margin-top: -0.15rem;
+        margin-bottom: 1.05rem;
+    }
+
+    div[data-testid="stProgressBar"] > div {
+        background: rgba(254, 255, 255, 0.08) !important;
+        border-radius: 999px;
     }
 
     div[data-testid="stProgressBar"] > div > div {
         border-radius: 999px;
         height: 10px;
+        background: linear-gradient(90deg, #3aaf48, #74df82) !important;
     }
 
     .stButton > button,
     .stDownloadButton > button {
         width: 100%;
-        border-radius: 14px;
-        border: none;
-        min-height: 2.8rem;
-        font-weight: 700;
-        box-shadow: 0 8px 22px rgba(80, 95, 150, 0.12);
+        border-radius: 16px;
+        border: 1px solid rgba(254, 255, 255, 0.08);
+        min-height: 2.9rem;
+        font-weight: 800;
+        background: linear-gradient(180deg, rgba(41, 40, 41, 0.96), rgba(19, 20, 21, 1));
+        color: var(--text);
+        box-shadow: var(--shadow);
     }
 
     .stButton > button[kind="primary"],
     .stDownloadButton > button {
-        background: linear-gradient(135deg, rgba(123,140,255,1), rgba(167,139,250,1));
-        color: white;
+        background: linear-gradient(180deg, rgba(58, 175, 72, 1), rgba(5, 70, 45, 1));
+        color: #feffff;
+        border: 1px solid rgba(58, 175, 72, 0.28);
     }
 
     .stTextInput input,
@@ -271,22 +308,76 @@ CUSTOM_CSS = """
     .stNumberInput input,
     .stSelectbox div[data-baseweb="select"] > div,
     .stDateInput input {
-        border-radius: 14px !important;
-        border: 1px solid rgba(25, 28, 38, 0.08) !important;
-        background: rgba(255,255,255,0.95) !important;
+        border-radius: 16px !important;
+        border: 1px solid rgba(254, 255, 255, 0.08) !important;
+        background: rgba(254, 255, 255, 0.04) !important;
+        color: var(--text) !important;
+        box-shadow: none !important;
     }
 
-    .stSegmentedControl {
-        background: transparent;
+    textarea::placeholder,
+    input::placeholder {
+        color: rgba(254, 255, 255, 0.34) !important;
+    }
+
+    .stSelectbox label,
+    .stTextArea label,
+    .stTextInput label,
+    .stNumberInput label,
+    .stCaption,
+    small {
+        color: rgba(254, 255, 255, 0.62) !important;
+    }
+
+    button[role="tab"],
+    .stSegmentedControl button {
+        border-radius: 999px !important;
+    }
+
+    [data-baseweb="tab-list"] {
+        background: rgba(254, 255, 255, 0.05) !important;
+        border-radius: 999px !important;
+        padding: 0.2rem !important;
+        border: 1px solid rgba(254, 255, 255, 0.06) !important;
+    }
+
+    [data-baseweb="tab"] {
+        color: rgba(254, 255, 255, 0.66) !important;
+        font-weight: 700 !important;
+    }
+
+    [aria-selected="true"][data-baseweb="tab"] {
+        background: linear-gradient(180deg, rgba(58, 175, 72, 1), rgba(5, 70, 45, 1)) !important;
+        color: #feffff !important;
+    }
+
+    .stAlert {
+        background: rgba(250, 77, 86, 0.12);
+        border: 1px solid rgba(250, 77, 86, 0.18);
+        color: var(--text);
+        border-radius: 16px;
+    }
+
+    [data-testid="stExpander"] {
+        background: linear-gradient(180deg, rgba(41, 40, 41, 0.96), rgba(19, 20, 21, 0.98));
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        overflow: hidden;
+    }
+
+    hr {
+        border-color: rgba(254, 255, 255, 0.08);
     }
 
     @media (max-width: 640px) {
         .block-container {
-            padding-left: 0.8rem;
-            padding-right: 0.8rem;
+            padding-top: 5.8rem;
+            padding-left: 0.85rem;
+            padding-right: 0.85rem;
         }
+
         .hero-title {
-            font-size: 1.55rem;
+            font-size: 1.65rem;
         }
     }
 </style>
@@ -446,7 +537,7 @@ def render_hero(progress, goals):
         f"""
         <div class='hero-card'>
             <div class='hero-eyebrow'>Weekly movement</div>
-            <div class='hero-title'>Track the week beautifully.</div>
+            <div class='hero-title'>Track Your Week.</div>
             <div class='hero-subtitle'>A calm, phone-friendly planner for AM and PM movement, notes, and weekly goal progress.</div>
         </div>
         """,
@@ -510,7 +601,7 @@ def render_day_card(day, day_data, activity_options, today_only=False):
     )
 
     # Remove the visual gap created by the markdown card shell.
-    st.markdown("<div style='margin-top:-5.5rem'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='margin-top:-5.1rem'></div>", unsafe_allow_html=True)
 
     with st.container(border=False):
         st.markdown("<div class='mini-chip'>Morning</div>", unsafe_allow_html=True)
