@@ -1,0 +1,5 @@
+.venv/
+__pycache__/
+*.pyc
+movement_tracker_data.json
+.DS_Store
