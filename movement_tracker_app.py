@@ -64,10 +64,8 @@ CUSTOM_CSS = """
     }
 
     .hero-card {
-        background:
-            radial-gradient(circle at top center, rgba(58, 175, 72, 0.22), transparent 36%),
-            linear-gradient(180deg, rgba(5, 70, 45, 0.98) 0%, rgba(19, 20, 21, 1) 100%);
-        border: 1px solid rgba(254, 255, 255, 0.12);
+        background: linear-gradient(180deg, #05462d 0%, #131415 100%);
+        border: 1px solid rgba(254, 255, 255, 0.14);
         border-radius: 30px;
         padding: 1.7rem 1.35rem;
         color: var(--text);
@@ -84,7 +82,7 @@ CUSTOM_CSS = """
         inset: 0;
         border-radius: 30px;
         padding: 1px;
-        background: linear-gradient(135deg, rgba(58, 175, 72, 0.5), rgba(254, 255, 255, 0.08));
+        background: linear-gradient(135deg, rgba(58, 175, 72, 0.55), rgba(254, 255, 255, 0.10));
         -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
         -webkit-mask-composite: xor;
         mask-composite: exclude;
@@ -222,11 +220,13 @@ CUSTOM_CSS = """
     }
 
     .planner-day {
-        font-size: 1.32rem;
+        font-size: 2.64rem;
         font-weight: 800;
         color: var(--text);
         text-align: center;
         width: 100%;
+        line-height: 1.02;
+        letter-spacing: -0.02em;
     }
 
     .planner-header .today-badge {
@@ -353,8 +353,7 @@ CUSTOM_CSS = """
         box-shadow: none !important;
     }
 
-    .stTextArea textarea,
-    .stSelectbox div[data-baseweb="select"] > div {
+    .stTextArea textarea {
         padding-left: 0.95rem !important;
         padding-right: 0.95rem !important;
     }
@@ -380,19 +379,30 @@ CUSTOM_CSS = """
 
     [data-baseweb="tab-list"] {
         background: rgba(254, 255, 255, 0.05) !important;
-        border-radius: 999px !important;
-        padding: 0.2rem !important;
+        border-radius: 24px !important;
+        padding: 0.28rem !important;
         border: 1px solid rgba(254, 255, 255, 0.06) !important;
+        gap: 0.35rem !important;
+        flex-wrap: wrap !important;
     }
 
     [data-baseweb="tab"] {
-        color: rgba(254, 255, 255, 0.66) !important;
-        font-weight: 700 !important;
+        color: rgba(254, 255, 255, 0.76) !important;
+        font-weight: 800 !important;
+        min-height: 2.55rem !important;
+        padding: 0.55rem 0.9rem !important;
+        border-radius: 999px !important;
+        background: rgba(254, 255, 255, 0.04) !important;
+        border: 1px solid rgba(254, 255, 255, 0.06) !important;
+        flex-grow: 0 !important;
+        box-shadow: none !important;
     }
 
     [aria-selected="true"][data-baseweb="tab"] {
         background: linear-gradient(180deg, rgba(58, 175, 72, 1), rgba(5, 70, 45, 1)) !important;
         color: #feffff !important;
+        border: 1px solid rgba(58, 175, 72, 0.34) !important;
+        box-shadow: 0 8px 20px rgba(5, 70, 45, 0.35) !important;
     }
 
     .stAlert {
@@ -422,6 +432,10 @@ CUSTOM_CSS = """
 
         .hero-title {
             font-size: 1.75rem;
+        }
+
+        .planner-day {
+            font-size: 2.1rem;
         }
 
         .day-inner {
@@ -628,6 +642,24 @@ def render_goal_cards(goals, progress):
 
 
 
+def render_activity_chip_group(day, period_label, key_name, current_value, activity_options):
+    st.markdown(f"<div class='mini-chip'>{period_label}</div>", unsafe_allow_html=True)
+
+    # Streamlit does not offer fully custom CSS-targetable pill chips with arbitrary styling
+    # and state behavior the way a native app would. segmented_control is the cleanest,
+    # most stable built-in alternative for fast one-tap selection.
+    selected = st.segmented_control(
+        f"{period_label} activity · {day}",
+        options=activity_options,
+        default=current_value if current_value in activity_options else activity_options[0],
+        selection_mode="single",
+        key=key_name,
+        label_visibility="collapsed",
+    )
+    return selected
+
+
+
 def render_day_card(day, day_data, activity_options, today_only=False):
     badge = ""
     if day == TODAY_NAME:
@@ -649,13 +681,13 @@ def render_day_card(day, day_data, activity_options, today_only=False):
 
     with st.container(border=False):
         st.markdown("<div class='day-inner'>", unsafe_allow_html=True)
-        st.markdown("<div class='mini-chip'>Morning</div>", unsafe_allow_html=True)
-        day_data["am_activity"] = st.selectbox(
-            f"AM activity · {day}",
-            options=activity_options,
-            index=activity_options.index(day_data.get("am_activity", activity_options[0])) if day_data.get("am_activity", activity_options[0]) in activity_options else 0,
-            key=f"{day}_am_activity",
-            label_visibility="collapsed",
+
+        day_data["am_activity"] = render_activity_chip_group(
+            day,
+            "Morning",
+            f"{day}_am_activity",
+            day_data.get("am_activity", activity_options[0]),
+            activity_options,
         )
         day_data["am_note"] = st.text_area(
             f"AM note · {day}",
@@ -666,14 +698,14 @@ def render_day_card(day, day_data, activity_options, today_only=False):
             label_visibility="collapsed",
         )
 
-        st.markdown("<div style='height:0.55rem'></div>", unsafe_allow_html=True)
-        st.markdown("<div class='mini-chip'>Evening</div>", unsafe_allow_html=True)
-        day_data["pm_activity"] = st.selectbox(
-            f"PM activity · {day}",
-            options=activity_options,
-            index=activity_options.index(day_data.get("pm_activity", activity_options[0])) if day_data.get("pm_activity", activity_options[0]) in activity_options else 0,
-            key=f"{day}_pm_activity",
-            label_visibility="collapsed",
+        st.markdown("<div style='height:0.65rem'></div>", unsafe_allow_html=True)
+
+        day_data["pm_activity"] = render_activity_chip_group(
+            day,
+            "Evening",
+            f"{day}_pm_activity",
+            day_data.get("pm_activity", activity_options[0]),
+            activity_options,
         )
         day_data["pm_note"] = st.text_area(
             f"PM note · {day}",
@@ -883,5 +915,5 @@ save_data(data)
 
 st.markdown("<div style='height:1rem'></div>", unsafe_allow_html=True)
 st.caption(
-    "Tip: this version stores data locally in a JSON file. Later, you can swap that layer for SQLite, Supabase, Firebase, or another database without changing the overall app structure much. Streamlit’s native selectbox does not currently support true tap-again-to-close behavior like a fully native mobile picker, so this version keeps the standard Streamlit dropdown behavior rather than adding a brittle workaround."
+    "Tip: this version stores data locally in a JSON file. Later, you can swap that layer for SQLite, Supabase, Firebase, or another database without changing the overall app structure much. Streamlit does not provide fully custom native chip controls, so this version uses segmented controls as the cleanest stable alternative to dropdowns for faster one-tap activity selection."
 )
