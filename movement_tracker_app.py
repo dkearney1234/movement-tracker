@@ -164,17 +164,17 @@ CUSTOM_CSS = """
     .goal-card {
         background: linear-gradient(180deg, rgba(41, 40, 41, 0.96), rgba(19, 20, 21, 0.98));
         border: 1px solid var(--border);
-        border-radius: 18px;
-        padding: 0.8rem 0.85rem;
+        border-radius: 16px;
+        padding: 0.55rem 0.6rem;
         box-shadow: var(--shadow);
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.5rem;
         min-height: 0;
     }
 
     .goal-card.complete {
         background:
-            radial-gradient(circle at top center, rgba(58, 175, 72, 0.12), transparent 48%),
-            linear-gradient(180deg, rgba(5, 70, 45, 0.9), rgba(19, 20, 21, 0.98));
+            radial-gradient(circle at top center, rgba(58, 175, 72, 0.1), transparent 48%),
+            linear-gradient(180deg, rgba(5, 70, 45, 0.88), rgba(19, 20, 21, 0.98));
         border: 1px solid rgba(58, 175, 72, 0.22);
         box-shadow: var(--glow);
     }
@@ -183,28 +183,31 @@ CUSTOM_CSS = """
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
-        gap: 0.45rem;
-        margin-bottom: 0.45rem;
+        gap: 0.3rem;
+        margin-bottom: 0.28rem;
     }
 
     .goal-name {
-        font-size: 0.95rem;
+        font-size: 0.76rem;
         font-weight: 700;
         color: var(--text);
-        line-height: 1.15;
+        line-height: 1.08;
+        letter-spacing: -0.01em;
     }
 
     .goal-pill {
         display: inline-flex;
         align-items: center;
-        padding: 0.22rem 0.5rem;
+        justify-content: center;
+        padding: 0.16rem 0.4rem;
         border-radius: 999px;
-        font-size: 0.64rem;
+        font-size: 0.58rem;
         font-weight: 800;
         background: rgba(254, 255, 255, 0.06);
         color: rgba(254, 255, 255, 0.76);
         border: 1px solid rgba(254, 255, 255, 0.06);
         white-space: nowrap;
+        margin-top: 0.2rem;
     }
 
     .goal-pill.complete {
@@ -216,12 +219,12 @@ CUSTOM_CSS = """
     .goal-metrics {
         display: flex;
         align-items: baseline;
-        gap: 0.25rem;
-        margin-bottom: 0.2rem;
+        gap: 0.18rem;
+        margin-bottom: 0.12rem;
     }
 
     .goal-number {
-        font-size: 1.35rem;
+        font-size: 1.02rem;
         font-weight: 800;
         line-height: 1;
         color: var(--text);
@@ -229,13 +232,11 @@ CUSTOM_CSS = """
 
     .goal-target {
         color: rgba(254, 255, 255, 0.62);
-        font-size: 0.82rem;
+        font-size: 0.68rem;
     }
 
     .goal-caption {
-        color: rgba(254, 255, 255, 0.7);
-        font-size: 0.76rem;
-        margin-top: 0.22rem;
+        display: none;
     }
 
     .planner-card {
@@ -477,15 +478,20 @@ CUSTOM_CSS = """
         }
 
         .goal-card {
-            padding: 0.72rem 0.72rem;
+            padding: 0.46rem 0.5rem;
         }
 
         .goal-name {
-            font-size: 0.88rem;
+            font-size: 0.68rem;
         }
 
         .goal-number {
-            font-size: 1.2rem;
+            font-size: 0.94rem;
+        }
+
+        .goal-pill {
+            font-size: 0.52rem;
+            padding: 0.14rem 0.34rem;
         }
     }
 
@@ -789,34 +795,29 @@ def render_hero(progress, goals, week_entries):
 def render_goal_cards(goals, progress):
     st.markdown("<div class='section-label'>Weekly goals</div>", unsafe_allow_html=True)
 
-    rows = [goals[i:i+2] for i in range(0, len(goals), 2)]
-    for row in rows:
-        cols = st.columns(2, gap="small")
-        for idx, goal in enumerate(row):
-            with cols[idx]:
-                name = goal["name"]
-                target = goal["target"]
-                current = progress.get(name, 0)
-                is_complete = current >= target
-                st.markdown(
-                    f"""
-                    <div class='goal-card {'complete' if is_complete else ''}'>
-                        <div class='goal-top'>
-                            <div class='goal-name'>{name}</div>
-                            <div class='goal-pill {'complete' if is_complete else ''}'>{'Done' if is_complete else 'In progress'}</div>
-                        </div>
-                        <div class='goal-metrics'>
-                            <div class='goal-number'>{current}</div>
-                            <div class='goal-target'>/ {target}</div>
-                        </div>
-                        <div class='goal-caption'>{goal_status_text(current, target)}</div>
+    cols = st.columns(4, gap="small")
+    for idx, goal in enumerate(goals[:4]):
+        with cols[idx]:
+            name = goal["name"]
+            target = goal["target"]
+            current = progress.get(name, 0)
+            is_complete = current >= target
+            short_name = name.replace(" Sessions", "").replace(" / ", "/")
+            st.markdown(
+                f"""
+                <div class='goal-card {'complete' if is_complete else ''}'>
+                    <div class='goal-top'>
+                        <div class='goal-name'>{short_name}</div>
                     </div>
-                    """,
-                    unsafe_allow_html=True,
-                )
-        if len(row) == 1:
-            with cols[1]:
-                st.empty()
+                    <div class='goal-metrics'>
+                        <div class='goal-number'>{current}</div>
+                        <div class='goal-target'>/ {target}</div>
+                    </div>
+                    <div class='goal-pill {'complete' if is_complete else ''}'>{'Done' if is_complete else 'In progress'}</div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
 
 
 
