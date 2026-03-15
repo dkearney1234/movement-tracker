@@ -118,7 +118,7 @@ CUSTOM_CSS = """
 
     .metric-wrap {
         margin: 0.55rem auto 0.8rem auto;
-        max-width: 320px;
+        max-width: 260px;
     }
 
     .hero-stats-row {
@@ -157,7 +157,8 @@ CUSTOM_CSS = """
     .view-wrap {
         display: flex;
         justify-content: center;
-        margin: 0.35rem 0 0.9rem 0;
+        margin: 0.35rem auto 0.9rem auto;
+        width: 100%;
     }
 
     .goal-circles-wrap {
@@ -496,7 +497,7 @@ CUSTOM_CSS = """
         background: linear-gradient(180deg, rgba(41, 40, 41, 0.98), rgba(19, 20, 21, 1));
         border: 1px solid var(--border);
         border-radius: 18px;
-        padding: 0.65rem 0.8rem;
+        padding: 0.55rem 0.8rem;
         box-shadow: var(--shadow);
         text-align: center;
     }
@@ -505,6 +506,8 @@ CUSTOM_CSS = """
     div[data-testid="stMetric"] [data-testid="stMetricLabel"],
     div[data-testid="stMetric"] [data-testid="stMetricValue"] {
         color: var(--text) !important;
+        text-align: center !important;
+        justify-content: center !important;
     }
 
     
@@ -928,15 +931,14 @@ def render_goal_cards(goals, progress):
         target = max(goal["target"], 1)
         current = progress.get(name, 0)
         pct = max(0, min((current / target) * 100, 100))
-        is_complete = current >= target
         label = short_goal_name(name)
-        text_class = "" if is_complete else " goal-circle-text-dark"
+        text_color = "#131415" if current >= target else "#feffff"
         circles.append(
             f"""
             <div class='goal-circle-item'>
                 <div class='goal-circle-label'>{label}</div>
-                <div class='goal-circle {'complete' if is_complete else ''}' style='--pct:{pct};'>
-                    <div class='goal-circle-inner{text_class}'>{current}/{goal['target']}</div>
+                <div class='goal-circle' style='background: conic-gradient(#3aaf48 {pct}%, rgba(0,0,0,0.88) 0);'>
+                    <div class='goal-circle-inner' style='color: {text_color};'>{current}/{goal['target']}</div>
                 </div>
             </div>
             """
@@ -1229,12 +1231,14 @@ render_hero(progress, data["goals"], data["week_entries"])
 
 # View switcher optimized for phones.
 st.markdown("<div class='view-wrap'>", unsafe_allow_html=True)
-view = st.segmented_control(
-    "View",
-    options=["Today", "Week"],
-    default="Today",
-    selection_mode="single",
-)
+_view_left, _view_center, _view_right = st.columns([1, 2, 1])
+with _view_center:
+    view = st.segmented_control(
+        "View",
+        options=["Today", "Week"],
+        default="Today",
+        selection_mode="single",
+    )
 st.markdown("</div>", unsafe_allow_html=True)
 
 render_goal_cards(data["goals"], progress)
