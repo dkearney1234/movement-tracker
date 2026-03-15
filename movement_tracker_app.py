@@ -205,7 +205,7 @@ CUSTOM_CSS = """
         background: linear-gradient(180deg, rgba(41, 40, 41, 1), rgba(19, 20, 21, 1));
         border: 1px solid rgba(254, 255, 255, 0.1);
         border-radius: 26px;
-        padding: 1.25rem 1.2rem;
+        padding: 0.7rem 1.2rem;
         box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
         margin-bottom: 1rem;
     }
@@ -214,9 +214,10 @@ CUSTOM_CSS = """
         display: flex;
         justify-content: center;
         align-items: center;
-        margin-bottom: 1rem;
+        margin-bottom: 0.2rem;
         position: relative;
-        min-height: 1.8rem;
+        min-height: 0;
+        padding: 0.25rem 0;
     }
 
     .planner-day {
@@ -677,7 +678,7 @@ def render_day_card(day, day_data, activity_options, today_only=False):
         unsafe_allow_html=True,
     )
 
-    st.markdown("<div style='margin-top:-5.0rem'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='margin-top:-2.8rem'></div>", unsafe_allow_html=True)
 
     with st.container(border=False):
         st.markdown("<div class='day-inner'>", unsafe_allow_html=True)
