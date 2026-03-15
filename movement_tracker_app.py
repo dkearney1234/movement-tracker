@@ -681,7 +681,7 @@ def render_day_card(day, day_data, activity_options, today_only=False):
         unsafe_allow_html=True,
     )
 
-    st.markdown("<div style='margin-top:-2.25rem'></div>", u
+    st.markdown("<div style='margin-top:-2.25rem'></div>", unsafe_allow_html=True)
 
     with st.container(border=False):
         st.markdown("<div class='day-inner'>", unsafe_allow_html=True)
