@@ -236,34 +236,53 @@ CUSTOM_CSS = """
     }
 
     .planner-card {
-        background: linear-gradient(180deg, rgba(41, 40, 41, 1), rgba(19, 20, 21, 1));
-        border: 1px solid rgba(254, 255, 255, 0.1);
-        border-radius: 26px;
-        padding: 0.7rem 1.2rem;
-        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
+        background:
+            radial-gradient(circle at 20% 10%, rgba(58, 175, 72, 0.12), transparent 34%),
+            linear-gradient(135deg, rgba(41, 40, 41, 0.98) 0%, rgba(19, 20, 21, 1) 72%);
+        border: 1px solid rgba(254, 255, 255, 0.11);
+        border-radius: 28px;
+        padding: 1rem 1.2rem;
+        box-shadow: 0 20px 44px rgba(0, 0, 0, 0.42);
         margin-top: 1.2rem;
-        margin-bottom: 0.45rem;
+        margin-bottom: 0.3rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .planner-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 28px;
+        padding: 1px;
+        background: linear-gradient(135deg, rgba(58, 175, 72, 0.28), rgba(254, 255, 255, 0.08));
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
     }
 
     .planner-header {
         display: flex;
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
-        margin-bottom: 0rem;
+        gap: 0.85rem;
+        margin-bottom: 0;
         position: relative;
         min-height: 0;
-        padding: 0.18rem 0;
+        padding: 0.18rem 0.05rem;
     }
 
     .planner-day {
-        font-size: 2.64rem;
+        font-size: 2.48rem;
         font-weight: 800;
         color: #3aaf48;
-        text-align: center;
-        width: 100%;
-        line-height: 1.02;
-        letter-spacing: -0.02em;
-        text-shadow: 0 0 18px rgba(58, 175, 72, 0.14);
+        text-align: left;
+        width: auto;
+        line-height: 0.98;
+        letter-spacing: -0.03em;
+        text-shadow: 0 0 18px rgba(58, 175, 72, 0.16);
+        flex: 1 1 auto;
     }
 
     .planner-header .today-badge {
@@ -271,17 +290,19 @@ CUSTOM_CSS = """
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 0.18rem;
-        padding: 0.48rem 0.72rem;
+        gap: 0.16rem;
+        padding: 0.5rem 0.8rem;
         border-radius: 999px;
-        background: rgba(58, 175, 72, 0.14);
+        background: linear-gradient(180deg, rgba(58, 175, 72, 0.18), rgba(5, 70, 45, 0.22));
         color: #8ef6a0;
-        border: 1px solid rgba(58, 175, 72, 0.18);
-        font-size: 0.75rem;
+        border: 1px solid rgba(58, 175, 72, 0.22);
+        font-size: 0.76rem;
         font-weight: 800;
-        min-width: 5.5rem;
-        line-height: 1.05;
+        min-width: 5.7rem;
+        line-height: 1.02;
         text-align: center;
+        box-shadow: 0 8px 20px rgba(5, 70, 45, 0.22);
+        flex: 0 0 auto;
     }
 
     .completion-pill {
@@ -440,6 +461,10 @@ CUSTOM_CSS = """
         margin-bottom: 0.2rem;
     }
 
+    .day-inner {
+        padding-top: 0.15rem;
+    }
+
     textarea::placeholder,
     input::placeholder {
         color: rgba(254, 255, 255, 0.34) !important;
@@ -517,7 +542,7 @@ CUSTOM_CSS = """
         }
 
         .planner-day {
-            font-size: 2.1rem;
+            font-size: 2.0rem;
         }
 
         .day-inner {
@@ -817,7 +842,7 @@ def render_day_card(day, day_data, activity_options, today_only=False):
         unsafe_allow_html=True,
     )
 
-    st.markdown("<div style='margin-top:-2.25rem'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='margin-top:-0.35rem'></div>", unsafe_allow_html=True)
 
     with st.container(border=False):
         st.markdown("<div class='day-inner'>", unsafe_allow_html=True)
