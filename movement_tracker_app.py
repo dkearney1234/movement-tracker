@@ -1311,7 +1311,7 @@ render_hero(progress, data["goals"], data["week_entries"])
 
 # View switcher optimized for phones.
 st.markdown("<div class='view-wrap'>", unsafe_allow_html=True)
-_view_left, _view_center, _view_right = st.columns([1.2, 1.6, 1.2])
+_view_left, _view_center, _view_right = st.columns([1, 3, 1])
 with _view_center:
     view = st.segmented_control(
         "View",
