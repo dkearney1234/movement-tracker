@@ -268,15 +268,20 @@ CUSTOM_CSS = """
 
     .planner-header .today-badge {
         display: inline-flex;
+        flex-direction: column;
         align-items: center;
-        gap: 0.35rem;
-        padding: 0.34rem 0.62rem;
+        justify-content: center;
+        gap: 0.18rem;
+        padding: 0.48rem 0.72rem;
         border-radius: 999px;
         background: rgba(58, 175, 72, 0.14);
         color: #8ef6a0;
         border: 1px solid rgba(58, 175, 72, 0.18);
         font-size: 0.75rem;
         font-weight: 800;
+        min-width: 5.5rem;
+        line-height: 1.05;
+        text-align: center;
     }
 
     .completion-pill {
@@ -311,6 +316,44 @@ CUSTOM_CSS = """
         background: linear-gradient(180deg, rgba(58, 175, 72, 0.09), rgba(254, 255, 255, 0.02));
         border: 1px solid rgba(58, 175, 72, 0.16);
         box-shadow: 0 8px 24px rgba(5, 70, 45, 0.16);
+    }
+
+    .summary-card {
+        background: linear-gradient(180deg, rgba(41, 40, 41, 0.96), rgba(19, 20, 21, 0.98));
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 0.85rem 1rem;
+        box-shadow: var(--shadow);
+        margin-top: 0.8rem;
+    }
+
+    .summary-line {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.9rem;
+        padding: 0.58rem 0;
+        border-bottom: 1px solid rgba(254, 255, 255, 0.06);
+        font-size: 0.95rem;
+        color: var(--text);
+    }
+
+    .summary-line:last-child {
+        border-bottom: none;
+    }
+
+    .summary-name {
+        display: inline-block;
+        color: var(--text);
+        line-height: 1.35;
+    }
+
+    .summary-value {
+        color: var(--text);
+        white-space: nowrap;
+        text-align: right;
+        font-weight: 800;
+        flex-shrink: 0;
     }
 
     div[data-testid="stMetric"] {
@@ -740,10 +783,13 @@ def render_activity_chip_group(day, period_label, key_name, current_value, activ
 
 
 def render_completion_toggle(day, label, key_name, current_value):
+    if key_name not in st.session_state:
+        st.session_state[key_name] = False if current_value is None else bool(current_value)
+
     st.markdown(f"<div class='done-label'>Mark {label.lower()} as done</div>", unsafe_allow_html=True)
     value = st.toggle(
         f"Done · {label} · {day}",
-        value=bool(current_value),
+        value=st.session_state[key_name],
         key=key_name,
         label_visibility="collapsed",
     )
@@ -857,7 +903,7 @@ def render_summary(goals, progress):
     for goal in goals:
         current = progress.get(goal["name"], 0)
         rows.append(
-            f"<div class='summary-line'><span>{goal['name']}</span><strong>{current} / {goal['target']}</strong></div>"
+            f"<div class='summary-line'><span class='summary-name'>{goal['name']}</span><strong class='summary-value'>{current} / {goal['target']}</strong></div>"
         )
 
     st.markdown(
