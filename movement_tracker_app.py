@@ -3,6 +3,7 @@ from pathlib import Path
 from datetime import datetime
 
 import streamlit as st
+import streamlit.components.v1 as components
 
 # ============================================================
 # Page config
@@ -836,7 +837,7 @@ def render_hero(progress, goals, week_entries):
 def render_goal_cards(goals, progress):
     st.markdown("<div class='section-label'>Weekly goals</div>", unsafe_allow_html=True)
 
-    cards = []
+    tiles = []
     for goal in goals[:4]:
         name = goal["name"]
         target = goal["target"]
@@ -844,20 +845,103 @@ def render_goal_cards(goals, progress):
         is_complete = current >= target
         short_name = name.replace(" Sessions", "").replace(" / ", "/")
         short_name = short_name.replace("Cardio/Run", "Cardio")
-        cards.append(
+        status = "Done" if is_complete else "In progress"
+        complete_class = " complete" if is_complete else ""
+        tiles.append(
             f"""
-            <div class='goal-tile {'complete' if is_complete else ''}'>
+            <div class='goal-tile{complete_class}'>
                 <div class='goal-name'>{short_name}</div>
                 <div class='goal-metrics'>
                     <div class='goal-number'>{current}</div>
                     <div class='goal-target'>/ {target}</div>
                 </div>
-                <div class='goal-pill {'complete' if is_complete else ''}'>{'Done' if is_complete else 'In progress'}</div>
+                <div class='goal-pill{complete_class}'>{status}</div>
             </div>
             """
         )
 
-    st.markdown(f"<div class='goal-strip'>{''.join(cards)}</div>", unsafe_allow_html=True)
+    goal_strip_html = f"""
+    <style>
+        .goal-strip-wrap {{
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding-bottom: 4px;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }}
+        .goal-strip-wrap::-webkit-scrollbar {{
+            display: none;
+        }}
+        .goal-strip {{
+            display: flex;
+            gap: 8px;
+            min-width: max-content;
+        }}
+        .goal-tile {{
+            width: 96px;
+            min-width: 96px;
+            background: linear-gradient(180deg, rgba(41, 40, 41, 0.96), rgba(19, 20, 21, 0.98));
+            border: 1px solid rgba(254,255,255,0.08);
+            border-radius: 14px;
+            padding: 8px;
+            box-sizing: border-box;
+            color: #feffff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }}
+        .goal-tile.complete {{
+            background: linear-gradient(180deg, rgba(5, 70, 45, 0.92), rgba(19, 20, 21, 0.98));
+            border-color: rgba(58,175,72,0.22);
+        }}
+        .goal-name {{
+            font-size: 11px;
+            line-height: 1.1;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #feffff;
+        }}
+        .goal-metrics {{
+            display: flex;
+            align-items: baseline;
+            gap: 2px;
+            margin-bottom: 6px;
+        }}
+        .goal-number {{
+            font-size: 18px;
+            line-height: 1;
+            font-weight: 800;
+            color: #feffff;
+        }}
+        .goal-target {{
+            font-size: 11px;
+            color: rgba(254,255,255,0.65);
+        }}
+        .goal-pill {{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3px 6px;
+            border-radius: 999px;
+            font-size: 9px;
+            font-weight: 800;
+            background: rgba(254,255,255,0.06);
+            color: rgba(254,255,255,0.76);
+            border: 1px solid rgba(254,255,255,0.06);
+            white-space: nowrap;
+        }}
+        .goal-pill.complete {{
+            background: rgba(58,175,72,0.16);
+            color: #8ef6a0;
+            border-color: rgba(58,175,72,0.18);
+        }}
+    </style>
+    <div class='goal-strip-wrap'>
+        <div class='goal-strip'>
+            {''.join(tiles)}
+        </div>
+    </div>
+    """
+    components.html(goal_strip_html, height=92, scrolling=False)
 
 
 
