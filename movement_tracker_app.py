@@ -933,11 +933,15 @@ def render_goal_cards(goals, progress):
         pct = max(0, min((current / target) * 100, 100))
         label = short_goal_name(name)
         text_color = "#131415" if current >= target else "#feffff"
+        wave_height = max(6, min(12, int(6 + (pct / 100) * 6)))
         circles.append(
             f"""
             <div class='goal-circle-item'>
                 <div class='goal-circle-label'>{label}</div>
-                <div class='goal-circle' style='background: conic-gradient(#3aaf48 {pct}%, rgba(0,0,0,0.88) 0);'>
+                <div class='goal-liquid-circle'>
+                    <div class='goal-liquid-fill' style='height: {pct}%;'>
+                        <div class='goal-liquid-wave' style='height: {wave_height}px;'></div>
+                    </div>
                     <div class='goal-circle-inner' style='color: {text_color};'>{current}/{goal['target']}</div>
                 </div>
             </div>
@@ -984,27 +988,42 @@ def render_goal_cards(goals, progress):
           text-align: center;
           word-break: break-word;
         }}
-        .goal-circle {{
+        .goal-liquid-circle {{
           width: 62px;
           height: 62px;
           border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          position: relative;
+          overflow: hidden;
           margin: 0 auto;
+          background: rgba(0,0,0,0.88);
           box-shadow: 0 8px 18px rgba(0,0,0,0.28);
           border: 1px solid rgba(254,255,255,0.08);
         }}
+        .goal-liquid-fill {{
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: #3aaf48;
+        }}
+        .goal-liquid-wave {{
+          position: absolute;
+          top: calc(-1 * var(--wave-h, 8px));
+          left: -8%;
+          width: 116%;
+          background: #3aaf48;
+          border-radius: 50% 50% 0 0;
+          height: 8px;
+        }}
         .goal-circle-inner {{
-          width: 62px;
-          height: 62px;
-          border-radius: 50%;
+          position: absolute;
+          inset: 0;
           display: flex;
           align-items: center;
           justify-content: center;
           font-size: 13px;
           font-weight: 800;
-          background: transparent;
+          z-index: 2;
         }}
       </style>
     </head>
@@ -1015,6 +1034,7 @@ def render_goal_cards(goals, progress):
     </body>
     </html>
     """
+    circles_html = circles_html.replace('var(--wave-h, 8px)', '8px')
     components.html(circles_html, height=104, scrolling=False)
 
 
