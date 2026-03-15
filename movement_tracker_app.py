@@ -1309,18 +1309,31 @@ progress = calculate_goal_progress(data["goals"], data["activity_catalog"], data
 render_hero(progress, data["goals"], data["week_entries"])
 
 # View switcher optimized for phones.
+if "view_mode" not in st.session_state:
+    st.session_state.view_mode = "Today"
+
 _view_outer_left, _view_outer_center, _view_outer_right = st.columns([1, 2, 1])
 with _view_outer_center:
     st.markdown("<div style='text-align:center; color: rgba(254,255,255,0.9); font-size: 0.95rem; margin-bottom: 0.35rem;'>View</div>", unsafe_allow_html=True)
-    _view_inner_left, _view_inner_center, _view_inner_right = st.columns([1, 3, 1])
-    with _view_inner_center:
-        view = st.segmented_control(
-            "View",
-            options=["Today", "Week"],
-            default="Today",
-            selection_mode="single",
-            label_visibility="collapsed",
-        )
+    _toggle_pad_left, _today_col, _week_col, _toggle_pad_right = st.columns([1, 1.3, 1.3, 1])
+    with _today_col:
+        if st.button(
+            "Today",
+            key="view_today_btn",
+            use_container_width=True,
+            type="primary" if st.session_state.view_mode == "Today" else "secondary",
+        ):
+            st.session_state.view_mode = "Today"
+    with _week_col:
+        if st.button(
+            "Week",
+            key="view_week_btn",
+            use_container_width=True,
+            type="primary" if st.session_state.view_mode == "Week" else "secondary",
+        ):
+            st.session_state.view_mode = "Week"
+
+view = st.session_state.view_mode
 
 render_goal_cards(data["goals"], progress)
 
