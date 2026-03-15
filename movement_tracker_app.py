@@ -162,20 +162,33 @@ CUSTOM_CSS = """
     }
 
     .goal-strip {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        display: flex;
         gap: 0.45rem;
         width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding-bottom: 0.2rem;
         margin-bottom: 0.5rem;
+        scroll-snap-type: x proximity;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .goal-strip::-webkit-scrollbar {
+        display: none;
     }
 
     .goal-tile {
+        flex: 0 0 110px;
+        min-width: 110px;
+        max-width: 110px;
         background: linear-gradient(180deg, rgba(41, 40, 41, 0.96), rgba(19, 20, 21, 0.98));
         border: 1px solid var(--border);
         border-radius: 14px;
         padding: 0.42rem 0.46rem;
         box-shadow: var(--shadow);
         min-height: unset;
+        scroll-snap-align: start;
     }
 
     .goal-tile.complete {
@@ -499,11 +512,13 @@ CUSTOM_CSS = """
         }
 
         .goal-strip {
-            grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 0.32rem;
         }
 
         .goal-tile {
+            flex: 0 0 94px;
+            min-width: 94px;
+            max-width: 94px;
             padding: 0.34rem 0.34rem;
         }
 
