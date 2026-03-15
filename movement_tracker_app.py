@@ -117,7 +117,8 @@ CUSTOM_CSS = """
     }
 
     .metric-wrap {
-        margin-bottom: 0.4rem;
+        margin: 0.55rem auto 0.8rem auto;
+        max-width: 320px;
     }
 
     .hero-stats-row {
@@ -129,8 +130,8 @@ CUSTOM_CSS = """
     }
 
     .hero-stat {
-        min-width: 132px;
-        padding: 0.7rem 0.9rem;
+        min-width: 170px;
+        padding: 0.78rem 1rem;
         border-radius: 18px;
         background: rgba(254, 255, 255, 0.05);
         border: 1px solid rgba(254, 255, 255, 0.08);
@@ -138,7 +139,7 @@ CUSTOM_CSS = """
     }
 
     .hero-stat-number {
-        font-size: 1.18rem;
+        font-size: 1.24rem;
         font-weight: 800;
         color: #feffff;
         line-height: 1.05;
@@ -151,6 +152,80 @@ CUSTOM_CSS = """
         letter-spacing: 0.03em;
         color: rgba(254, 255, 255, 0.68);
         text-transform: lowercase;
+    }
+
+    .view-wrap {
+        display: flex;
+        justify-content: center;
+        margin: 0.35rem 0 0.9rem 0;
+    }
+
+    .goal-circles-wrap {
+        display: flex;
+        justify-content: center;
+        gap: 0.8rem;
+        flex-wrap: nowrap;
+        width: 100%;
+        margin: 0.15rem 0 0.55rem 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding-bottom: 0.15rem;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .goal-circles-wrap::-webkit-scrollbar {
+        display: none;
+    }
+
+    .goal-circle-item {
+        flex: 0 0 auto;
+        min-width: 78px;
+        text-align: center;
+    }
+
+    .goal-circle-label {
+        font-size: 0.72rem;
+        line-height: 1.08;
+        font-weight: 700;
+        color: var(--text);
+        min-height: 1.8rem;
+        margin-bottom: 0.42rem;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .goal-circle {
+        --pct: 0;
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        background: conic-gradient(#3aaf48 calc(var(--pct) * 1%), rgba(0,0,0,0.84) 0);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        box-shadow: 0 10px 22px rgba(0,0,0,0.28);
+        border: 1px solid rgba(254,255,255,0.08);
+    }
+
+    .goal-circle-inner {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        font-weight: 800;
+        color: #131415;
+        background: transparent;
+    }
+
+    .goal-circle-text-dark {
+        color: #feffff;
     }
 
     .section-label {
@@ -420,9 +495,10 @@ CUSTOM_CSS = """
     div[data-testid="stMetric"] {
         background: linear-gradient(180deg, rgba(41, 40, 41, 0.98), rgba(19, 20, 21, 1));
         border: 1px solid var(--border);
-        border-radius: 20px;
-        padding: 0.95rem;
+        border-radius: 18px;
+        padding: 0.65rem 0.8rem;
         box-shadow: var(--shadow);
+        text-align: center;
     }
 
     div[data-testid="stMetric"] label,
@@ -512,28 +588,34 @@ CUSTOM_CSS = """
             padding-top: 0.15rem;
         }
 
-        .goal-strip {
-            gap: 0.32rem;
+        .goal-circles-wrap {
+            gap: 0.55rem;
+            justify-content: space-between;
         }
 
-        .goal-tile {
-            flex: 0 0 94px;
-            min-width: 94px;
-            max-width: 94px;
-            padding: 0.34rem 0.34rem;
+        .goal-circle-item {
+            min-width: 70px;
         }
 
-        .goal-name {
-            font-size: 0.54rem;
+        .goal-circle-label {
+            font-size: 0.66rem;
+            min-height: 1.55rem;
         }
 
-        .goal-number {
+        .goal-circle,
+        .goal-circle-inner {
+            width: 62px;
+            height: 62px;
+        }
+
+        .goal-circle-inner {
             font-size: 0.78rem;
         }
 
-        .goal-pill {
-            font-size: 0.4rem;
-            padding: 0.08rem 0.2rem;
+        [data-baseweb="tab"] {
+            min-width: 116px !important;
+            min-height: 2.8rem !important;
+            font-size: 0.96rem !important;
         }
     }
 
@@ -558,23 +640,25 @@ CUSTOM_CSS = """
 
     [data-baseweb="tab-list"] {
         background: rgba(254, 255, 255, 0.05) !important;
-        border-radius: 24px !important;
-        padding: 0.28rem !important;
-        border: 1px solid rgba(254, 255, 255, 0.06) !important;
-        gap: 0.35rem !important;
-        flex-wrap: wrap !important;
+        border-radius: 999px !important;
+        padding: 0.22rem !important;
+        border: 1px solid rgba(254, 255, 255, 0.08) !important;
+        gap: 0.18rem !important;
+        justify-content: center !important;
     }
 
     [data-baseweb="tab"] {
-        color: rgba(254, 255, 255, 0.76) !important;
+        color: rgba(254, 255, 255, 0.8) !important;
         font-weight: 800 !important;
-        min-height: 2.55rem !important;
-        padding: 0.55rem 0.9rem !important;
+        min-height: 2.9rem !important;
+        min-width: 128px !important;
+        padding: 0.6rem 1.25rem !important;
         border-radius: 999px !important;
-        background: rgba(254, 255, 255, 0.04) !important;
+        background: rgba(254, 255, 255, 0.03) !important;
         border: 1px solid rgba(254, 255, 255, 0.06) !important;
         flex-grow: 0 !important;
         box-shadow: none !important;
+        font-size: 1rem !important;
     }
 
     [aria-selected="true"][data-baseweb="tab"] {
@@ -806,7 +890,6 @@ def render_hero(progress, goals, week_entries):
     complete = completion_count(goals, progress)
     total = len(goals)
     planned, completed = planned_and_completed_session_counts(week_entries)
-    completion_rate = int((completed / planned) * 100) if planned else 0
 
     st.markdown(
         f"""
@@ -818,10 +901,6 @@ def render_hero(progress, goals, week_entries):
                 <div class='hero-stat'>
                     <div class='hero-stat-number'>{completed}/{planned if planned else 0}</div>
                     <div class='hero-stat-label'>sessions completed</div>
-                </div>
-                <div class='hero-stat'>
-                    <div class='hero-stat-number'>{completion_rate}%</div>
-                    <div class='hero-stat-label'>completion rate</div>
                 </div>
             </div>
         </div>
@@ -837,111 +916,33 @@ def render_hero(progress, goals, week_entries):
 def render_goal_cards(goals, progress):
     st.markdown("<div class='section-label'>Weekly goals</div>", unsafe_allow_html=True)
 
-    tiles = []
+    def short_goal_name(name: str) -> str:
+        name = name.replace(" Sessions", "")
+        name = name.replace(" / ", "/")
+        name = name.replace("Cardio/Run", "Cardio")
+        return name
+
+    circles = []
     for goal in goals[:4]:
         name = goal["name"]
-        target = goal["target"]
+        target = max(goal["target"], 1)
         current = progress.get(name, 0)
+        pct = max(0, min((current / target) * 100, 100))
         is_complete = current >= target
-        short_name = name.replace(" Sessions", "").replace(" / ", "/")
-        short_name = short_name.replace("Cardio/Run", "Cardio")
-        status = "Done" if is_complete else "In progress"
-        complete_class = " complete" if is_complete else ""
-        tiles.append(
+        label = short_goal_name(name)
+        text_class = "" if is_complete else " goal-circle-text-dark"
+        circles.append(
             f"""
-            <div class='goal-tile{complete_class}'>
-                <div class='goal-name'>{short_name}</div>
-                <div class='goal-metrics'>
-                    <div class='goal-number'>{current}</div>
-                    <div class='goal-target'>/ {target}</div>
+            <div class='goal-circle-item'>
+                <div class='goal-circle-label'>{label}</div>
+                <div class='goal-circle {'complete' if is_complete else ''}' style='--pct:{pct};'>
+                    <div class='goal-circle-inner{text_class}'>{current}/{goal['target']}</div>
                 </div>
-                <div class='goal-pill{complete_class}'>{status}</div>
             </div>
             """
         )
 
-    goal_strip_html = f"""
-    <style>
-        .goal-strip-wrap {{
-            width: 100%;
-            overflow-x: auto;
-            overflow-y: hidden;
-            padding-bottom: 4px;
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }}
-        .goal-strip-wrap::-webkit-scrollbar {{
-            display: none;
-        }}
-        .goal-strip {{
-            display: flex;
-            gap: 8px;
-            min-width: max-content;
-        }}
-        .goal-tile {{
-            width: 96px;
-            min-width: 96px;
-            background: linear-gradient(180deg, rgba(41, 40, 41, 0.96), rgba(19, 20, 21, 0.98));
-            border: 1px solid rgba(254,255,255,0.08);
-            border-radius: 14px;
-            padding: 8px;
-            box-sizing: border-box;
-            color: #feffff;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        }}
-        .goal-tile.complete {{
-            background: linear-gradient(180deg, rgba(5, 70, 45, 0.92), rgba(19, 20, 21, 0.98));
-            border-color: rgba(58,175,72,0.22);
-        }}
-        .goal-name {{
-            font-size: 11px;
-            line-height: 1.1;
-            font-weight: 700;
-            margin-bottom: 6px;
-            color: #feffff;
-        }}
-        .goal-metrics {{
-            display: flex;
-            align-items: baseline;
-            gap: 2px;
-            margin-bottom: 6px;
-        }}
-        .goal-number {{
-            font-size: 18px;
-            line-height: 1;
-            font-weight: 800;
-            color: #feffff;
-        }}
-        .goal-target {{
-            font-size: 11px;
-            color: rgba(254,255,255,0.65);
-        }}
-        .goal-pill {{
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 3px 6px;
-            border-radius: 999px;
-            font-size: 9px;
-            font-weight: 800;
-            background: rgba(254,255,255,0.06);
-            color: rgba(254,255,255,0.76);
-            border: 1px solid rgba(254,255,255,0.06);
-            white-space: nowrap;
-        }}
-        .goal-pill.complete {{
-            background: rgba(58,175,72,0.16);
-            color: #8ef6a0;
-            border-color: rgba(58,175,72,0.18);
-        }}
-    </style>
-    <div class='goal-strip-wrap'>
-        <div class='goal-strip'>
-            {''.join(tiles)}
-        </div>
-    </div>
-    """
-    components.html(goal_strip_html, height=92, scrolling=False)
+    st.markdown(f"<div class='goal-circles-wrap'>{''.join(circles)}</div>", unsafe_allow_html=True)
 
 
 
@@ -1227,12 +1228,14 @@ progress = calculate_goal_progress(data["goals"], data["activity_catalog"], data
 render_hero(progress, data["goals"], data["week_entries"])
 
 # View switcher optimized for phones.
+st.markdown("<div class='view-wrap'>", unsafe_allow_html=True)
 view = st.segmented_control(
     "View",
     options=["Today", "Week"],
     default="Today",
     selection_mode="single",
 )
+st.markdown("</div>", unsafe_allow_html=True)
 
 render_goal_cards(data["goals"], progress)
 
