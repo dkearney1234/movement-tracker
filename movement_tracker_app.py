@@ -164,50 +164,49 @@ CUSTOM_CSS = """
     .goal-card {
         background: linear-gradient(180deg, rgba(41, 40, 41, 0.96), rgba(19, 20, 21, 0.98));
         border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 0.55rem 0.6rem;
+        border-radius: 14px;
+        padding: 0.42rem 0.46rem;
         box-shadow: var(--shadow);
-        margin-bottom: 0.5rem;
-        min-height: 0;
+        margin-bottom: 0.2rem;
+        min-height: unset;
     }
 
     .goal-card.complete {
         background:
-            radial-gradient(circle at top center, rgba(58, 175, 72, 0.1), transparent 48%),
-            linear-gradient(180deg, rgba(5, 70, 45, 0.88), rgba(19, 20, 21, 0.98));
+            radial-gradient(circle at top center, rgba(58, 175, 72, 0.08), transparent 48%),
+            linear-gradient(180deg, rgba(5, 70, 45, 0.86), rgba(19, 20, 21, 0.98));
         border: 1px solid rgba(58, 175, 72, 0.22);
         box-shadow: var(--glow);
     }
 
     .goal-top {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 0.3rem;
-        margin-bottom: 0.28rem;
+        display: none;
     }
 
     .goal-name {
-        font-size: 0.76rem;
+        font-size: 0.66rem;
         font-weight: 700;
         color: var(--text);
-        line-height: 1.08;
+        line-height: 1.02;
         letter-spacing: -0.01em;
+        margin-bottom: 0.18rem;
+        min-height: 0;
     }
 
     .goal-pill {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 0.16rem 0.4rem;
+        padding: 0.1rem 0.3rem;
         border-radius: 999px;
-        font-size: 0.58rem;
+        font-size: 0.48rem;
         font-weight: 800;
         background: rgba(254, 255, 255, 0.06);
         color: rgba(254, 255, 255, 0.76);
         border: 1px solid rgba(254, 255, 255, 0.06);
         white-space: nowrap;
-        margin-top: 0.2rem;
+        margin-top: 0.14rem;
+        line-height: 1.1;
     }
 
     .goal-pill.complete {
@@ -219,12 +218,12 @@ CUSTOM_CSS = """
     .goal-metrics {
         display: flex;
         align-items: baseline;
-        gap: 0.18rem;
-        margin-bottom: 0.12rem;
+        gap: 0.12rem;
+        margin-bottom: 0.06rem;
     }
 
     .goal-number {
-        font-size: 1.02rem;
+        font-size: 0.92rem;
         font-weight: 800;
         line-height: 1;
         color: var(--text);
@@ -232,7 +231,7 @@ CUSTOM_CSS = """
 
     .goal-target {
         color: rgba(254, 255, 255, 0.62);
-        font-size: 0.68rem;
+        font-size: 0.56rem;
     }
 
     .goal-caption {
@@ -478,20 +477,20 @@ CUSTOM_CSS = """
         }
 
         .goal-card {
-            padding: 0.46rem 0.5rem;
+            padding: 0.36rem 0.36rem;
         }
 
         .goal-name {
-            font-size: 0.68rem;
+            font-size: 0.58rem;
         }
 
         .goal-number {
-            font-size: 0.94rem;
+            font-size: 0.82rem;
         }
 
         .goal-pill {
-            font-size: 0.52rem;
-            padding: 0.14rem 0.34rem;
+            font-size: 0.44rem;
+            padding: 0.08rem 0.24rem;
         }
     }
 
@@ -795,7 +794,7 @@ def render_hero(progress, goals, week_entries):
 def render_goal_cards(goals, progress):
     st.markdown("<div class='section-label'>Weekly goals</div>", unsafe_allow_html=True)
 
-    cols = st.columns(4, gap="small")
+    cols = st.columns([1, 1, 1, 1], gap="small")
     for idx, goal in enumerate(goals[:4]):
         with cols[idx]:
             name = goal["name"]
@@ -803,12 +802,11 @@ def render_goal_cards(goals, progress):
             current = progress.get(name, 0)
             is_complete = current >= target
             short_name = name.replace(" Sessions", "").replace(" / ", "/")
+            short_name = short_name.replace("Cardio/Run", "Cardio")
             st.markdown(
                 f"""
                 <div class='goal-card {'complete' if is_complete else ''}'>
-                    <div class='goal-top'>
-                        <div class='goal-name'>{short_name}</div>
-                    </div>
+                    <div class='goal-name'>{short_name}</div>
                     <div class='goal-metrics'>
                         <div class='goal-number'>{current}</div>
                         <div class='goal-target'>/ {target}</div>
