@@ -119,6 +119,39 @@ CUSTOM_CSS = """
         margin-bottom: 0.4rem;
     }
 
+    .hero-stats-row {
+        display: flex;
+        justify-content: center;
+        gap: 0.8rem;
+        margin-top: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .hero-stat {
+        min-width: 132px;
+        padding: 0.7rem 0.9rem;
+        border-radius: 18px;
+        background: rgba(254, 255, 255, 0.05);
+        border: 1px solid rgba(254, 255, 255, 0.08);
+        text-align: center;
+    }
+
+    .hero-stat-number {
+        font-size: 1.18rem;
+        font-weight: 800;
+        color: #feffff;
+        line-height: 1.05;
+    }
+
+    .hero-stat-label {
+        margin-top: 0.18rem;
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        color: rgba(254, 255, 255, 0.68);
+        text-transform: lowercase;
+    }
+
     .section-label {
         font-size: 0.78rem;
         color: rgba(254, 255, 255, 0.58);
@@ -266,6 +299,20 @@ CUSTOM_CSS = """
         border: 1px solid rgba(58, 175, 72, 0.2);
     }
 
+    .period-card {
+        background: linear-gradient(180deg, rgba(254, 255, 255, 0.035), rgba(254, 255, 255, 0.02));
+        border: 1px solid rgba(254, 255, 255, 0.07);
+        border-radius: 20px;
+        padding: 0.9rem 0.9rem 0.75rem 0.9rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .period-card.complete {
+        background: linear-gradient(180deg, rgba(58, 175, 72, 0.09), rgba(254, 255, 255, 0.02));
+        border: 1px solid rgba(58, 175, 72, 0.16);
+        box-shadow: 0 8px 24px rgba(5, 70, 45, 0.16);
+    }
+
     div[data-testid="stMetric"] {
         background: linear-gradient(180deg, rgba(41, 40, 41, 0.98), rgba(19, 20, 21, 1));
         border: 1px solid var(--border);
@@ -332,18 +379,22 @@ CUSTOM_CSS = """
         padding-right: 0.95rem !important;
     }
 
-    div[data-testid="stCheckbox"] {
+    div[data-testid="stToggle"] {
         margin-top: 0.35rem;
         margin-bottom: 0.15rem;
     }
 
-    div[data-testid="stCheckbox"] label {
+    div[data-testid="stToggle"] label {
         color: rgba(254, 255, 255, 0.86) !important;
         font-weight: 700 !important;
     }
 
-    div[data-testid="stCheckbox"] input {
-        accent-color: #3aaf48;
+    .done-label {
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: rgba(254, 255, 255, 0.72);
+        margin-top: 0.42rem;
+        margin-bottom: 0.2rem;
     }
 
     textarea::placeholder,
@@ -587,6 +638,20 @@ def completion_count(goals, progress):
 
 
 
+def planned_and_completed_session_counts(week_entries):
+    planned = 0
+    completed = 0
+    for day_data in week_entries.values():
+        for activity_key, complete_key in [("am_activity", "am_completed"), ("pm_activity", "pm_completed")]:
+            activity = day_data.get(activity_key, "Rest")
+            if activity and activity != "Rest":
+                planned += 1
+            if day_data.get(complete_key, False) and activity and activity != "Rest":
+                completed += 1
+    return planned, completed
+
+
+
 def goal_status_text(current, target):
     if current >= target:
         return "Complete"
@@ -597,15 +662,28 @@ def goal_status_text(current, target):
 
 
 
-def render_hero(progress, goals):
+def render_hero(progress, goals, week_entries):
     complete = completion_count(goals, progress)
     total = len(goals)
+    planned, completed = planned_and_completed_session_counts(week_entries)
+    completion_rate = int((completed / planned) * 100) if planned else 0
+
     st.markdown(
         f"""
         <div class='hero-card hero-card-v3'>
             <div class='hero-eyebrow'>Weekly Movement</div>
             <div class='hero-title'>Track Your Week</div>
             <div class='hero-subtitle'>A calm, phone-friendly planner for AM and PM movement, notes, and weekly goal progress.</div>
+            <div class='hero-stats-row'>
+                <div class='hero-stat'>
+                    <div class='hero-stat-number'>{completed}/{planned if planned else 0}</div>
+                    <div class='hero-stat-label'>sessions completed</div>
+                </div>
+                <div class='hero-stat'>
+                    <div class='hero-stat-number'>{completion_rate}%</div>
+                    <div class='hero-stat-label'>completion rate</div>
+                </div>
+            </div>
         </div>
         """,
         unsafe_allow_html=True,
@@ -662,10 +740,12 @@ def render_activity_chip_group(day, period_label, key_name, current_value, activ
 
 
 def render_completion_toggle(day, label, key_name, current_value):
-    value = st.checkbox(
+    st.markdown(f"<div class='done-label'>Mark {label.lower()} as done</div>", unsafe_allow_html=True)
+    value = st.toggle(
         f"Done · {label} · {day}",
         value=bool(current_value),
         key=key_name,
+        label_visibility="collapsed",
     )
     status = "Completed" if value else "Planned"
     cls = "completion-pill complete" if value else "completion-pill"
@@ -696,6 +776,8 @@ def render_day_card(day, day_data, activity_options, today_only=False):
     with st.container(border=False):
         st.markdown("<div class='day-inner'>", unsafe_allow_html=True)
 
+        am_complete_class = "period-card complete" if day_data.get("am_completed", False) else "period-card"
+        st.markdown(f"<div class='{am_complete_class}'>", unsafe_allow_html=True)
         day_data["am_activity"] = render_activity_chip_group(
             day,
             "Morning",
@@ -709,17 +791,20 @@ def render_day_card(day, day_data, activity_options, today_only=False):
             f"{day}_am_completed",
             day_data.get("am_completed", False),
         )
-        day_data["am_note"] = st.text_area(
-            f"AM note · {day}",
-            value=day_data.get("am_note", ""),
-            placeholder="Add a quick note...",
-            key=f"{day}_am_note",
-            height=88 if today_only else 78,
-            label_visibility="collapsed",
-        )
+        am_notes_label = "Hide note" if day_data.get("am_note", "").strip() else "Add note"
+        with st.expander(am_notes_label, expanded=today_only and bool(day_data.get("am_note", "").strip())):
+            day_data["am_note"] = st.text_area(
+                f"AM note · {day}",
+                value=day_data.get("am_note", ""),
+                placeholder="Add a quick note...",
+                key=f"{day}_am_note",
+                height=88 if today_only else 78,
+                label_visibility="collapsed",
+            )
+        st.markdown("</div>", unsafe_allow_html=True)
 
-        st.markdown("<div style='height:0.65rem'></div>", unsafe_allow_html=True)
-
+        pm_complete_class = "period-card complete" if day_data.get("pm_completed", False) else "period-card"
+        st.markdown(f"<div class='{pm_complete_class}'>", unsafe_allow_html=True)
         day_data["pm_activity"] = render_activity_chip_group(
             day,
             "Evening",
@@ -733,14 +818,17 @@ def render_day_card(day, day_data, activity_options, today_only=False):
             f"{day}_pm_completed",
             day_data.get("pm_completed", False),
         )
-        day_data["pm_note"] = st.text_area(
-            f"PM note · {day}",
-            value=day_data.get("pm_note", ""),
-            placeholder="How did it feel?",
-            key=f"{day}_pm_note",
-            height=88 if today_only else 78,
-            label_visibility="collapsed",
-        )
+        pm_notes_label = "Hide note" if day_data.get("pm_note", "").strip() else "Add note"
+        with st.expander(pm_notes_label, expanded=today_only and bool(day_data.get("pm_note", "").strip())):
+            day_data["pm_note"] = st.text_area(
+                f"PM note · {day}",
+                value=day_data.get("pm_note", ""),
+                placeholder="How did it feel?",
+                key=f"{day}_pm_note",
+                height=88 if today_only else 78,
+                label_visibility="collapsed",
+            )
+        st.markdown("</div>", unsafe_allow_html=True)
         st.markdown("</div>", unsafe_allow_html=True)
 
 
@@ -916,7 +1004,7 @@ for day in DAYS:
             data["week_entries"][day][key] = activity_options[0]
 
 progress = calculate_goal_progress(data["goals"], data["activity_catalog"], data["week_entries"])
-render_hero(progress, data["goals"])
+render_hero(progress, data["goals"], data["week_entries"])
 
 # View switcher optimized for phones.
 view = st.segmented_control(
