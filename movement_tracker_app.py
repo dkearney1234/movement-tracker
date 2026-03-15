@@ -23,8 +23,8 @@ CUSTOM_CSS = """
     :root {
         --bg: #131415;
         --bg-2: #0f1814;
-        --panel: rgba(41, 40, 41, 0.94);
-        --panel-2: rgba(19, 20, 21, 0.96);
+        --panel: rgba(41, 40, 41, 0.98);
+        --panel-2: rgba(19, 20, 21, 0.99);
         --panel-soft: rgba(254, 255, 255, 0.04);
         --text: #feffff;
         --muted: rgba(254, 255, 255, 0.68);
@@ -33,7 +33,7 @@ CUSTOM_CSS = """
         --accent-red: #fa4d56;
         --border: rgba(254, 255, 255, 0.08);
         --shadow: 0 18px 40px rgba(0, 0, 0, 0.34);
-        --glow: 0 0 0 1px rgba(58, 175, 72, 0.06), 0 18px 40px rgba(0, 0, 0, 0.34);
+        --glow: 0 0 0 1px rgba(58, 175, 72, 0.08), 0 18px 40px rgba(0, 0, 0, 0.34);
         --radius-xl: 26px;
         --radius-lg: 20px;
         --radius-md: 16px;
@@ -65,37 +65,59 @@ CUSTOM_CSS = """
 
     .hero-card {
         background:
-            radial-gradient(circle at top center, rgba(58, 175, 72, 0.18), transparent 38%),
-            linear-gradient(180deg, rgba(5, 70, 45, 0.94) 0%, rgba(19, 20, 21, 0.98) 100%);
-        border: 1px solid rgba(254, 255, 255, 0.08);
+            radial-gradient(circle at top center, rgba(58, 175, 72, 0.22), transparent 36%),
+            linear-gradient(180deg, rgba(5, 70, 45, 0.98) 0%, rgba(19, 20, 21, 1) 100%);
+        border: 1px solid rgba(254, 255, 255, 0.12);
         border-radius: 30px;
-        padding: 1.4rem 1.2rem;
+        padding: 1.7rem 1.35rem;
         color: var(--text);
-        box-shadow: 0 20px 48px rgba(0, 0, 0, 0.36);
+        box-shadow: 0 22px 52px rgba(0, 0, 0, 0.42);
         margin-bottom: 1.15rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 30px;
+        padding: 1px;
+        background: linear-gradient(135deg, rgba(58, 175, 72, 0.5), rgba(254, 255, 255, 0.08));
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
     }
 
     .hero-eyebrow {
-        font-size: 0.78rem;
-        color: rgba(254, 255, 255, 0.72);
-        letter-spacing: 0.1em;
+        font-size: 0.8rem;
+        color: rgba(254, 255, 255, 0.76);
+        letter-spacing: 0.12em;
         text-transform: uppercase;
-        margin-bottom: 0.4rem;
-        font-weight: 700;
+        margin-bottom: 0.48rem;
+        font-weight: 800;
     }
 
     .hero-title {
-        font-size: 1.95rem;
+        font-size: 2.05rem;
         font-weight: 800;
         line-height: 1.06;
-        margin-bottom: 0.38rem;
+        margin-bottom: 0.45rem;
         color: var(--text);
     }
 
     .hero-subtitle {
-        font-size: 0.98rem;
-        line-height: 1.5;
-        color: rgba(254, 255, 255, 0.8);
+        font-size: 0.99rem;
+        line-height: 1.55;
+        color: rgba(254, 255, 255, 0.84);
+        max-width: 34rem;
+        margin: 0 auto;
+    }
+
+    .metric-wrap {
+        margin-bottom: 0.4rem;
     }
 
     .section-label {
@@ -108,7 +130,7 @@ CUSTOM_CSS = """
     }
 
     .goal-card {
-        background: linear-gradient(180deg, rgba(41, 40, 41, 0.96), rgba(19, 20, 21, 0.98));
+        background: linear-gradient(180deg, rgba(41, 40, 41, 0.98), rgba(19, 20, 21, 1));
         border: 1px solid var(--border);
         border-radius: var(--radius-xl);
         padding: 1rem;
@@ -119,7 +141,7 @@ CUSTOM_CSS = """
     .goal-card.complete {
         background:
             radial-gradient(circle at top center, rgba(58, 175, 72, 0.16), transparent 48%),
-            linear-gradient(180deg, rgba(5, 70, 45, 0.92), rgba(19, 20, 21, 0.98));
+            linear-gradient(180deg, rgba(5, 70, 45, 0.94), rgba(19, 20, 21, 1));
         border: 1px solid rgba(58, 175, 72, 0.24);
         box-shadow: var(--glow);
     }
@@ -182,30 +204,46 @@ CUSTOM_CSS = """
     }
 
     .planner-card {
-        background: linear-gradient(180deg, rgba(41, 40, 41, 0.96), rgba(19, 20, 21, 0.98));
-        border: 1px solid var(--border);
+        background: linear-gradient(180deg, rgba(41, 40, 41, 1), rgba(19, 20, 21, 1));
+        border: 1px solid rgba(254, 255, 255, 0.1);
         border-radius: 26px;
-        padding: 1rem;
-        box-shadow: var(--shadow);
+        padding: 1.25rem 1.2rem;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
         margin-bottom: 1rem;
     }
 
     .planner-header {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
-        margin-bottom: 0.9rem;
+        margin-bottom: 1rem;
+        position: relative;
+        min-height: 1.8rem;
     }
 
     .planner-day {
-        font-size: 1.1rem;
+        font-size: 1.32rem;
         font-weight: 800;
         color: var(--text);
+        text-align: center;
+        width: 100%;
+    }
+
+    .planner-header .today-badge {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
     }
 
     .planner-date {
         color: rgba(254, 255, 255, 0.62);
         font-size: 0.88rem;
+    }
+
+    .day-inner {
+        padding-left: 20%;
+        padding-right: 20%;
     }
 
     .mini-chip {
@@ -215,7 +253,7 @@ CUSTOM_CSS = """
         letter-spacing: 0.05em;
         text-transform: uppercase;
         color: rgba(254, 255, 255, 0.56);
-        margin-bottom: 0.4rem;
+        margin-bottom: 0.5rem;
     }
 
     .summary-card {
@@ -255,10 +293,10 @@ CUSTOM_CSS = """
     }
 
     div[data-testid="stMetric"] {
-        background: linear-gradient(180deg, rgba(41, 40, 41, 0.94), rgba(19, 20, 21, 0.98));
+        background: linear-gradient(180deg, rgba(41, 40, 41, 0.98), rgba(19, 20, 21, 1));
         border: 1px solid var(--border);
         border-radius: 20px;
-        padding: 0.85rem;
+        padding: 0.95rem;
         box-shadow: var(--shadow);
     }
 
@@ -313,6 +351,12 @@ CUSTOM_CSS = """
         background: rgba(254, 255, 255, 0.04) !important;
         color: var(--text) !important;
         box-shadow: none !important;
+    }
+
+    .stTextArea textarea,
+    .stSelectbox div[data-baseweb="select"] > div {
+        padding-left: 0.95rem !important;
+        padding-right: 0.95rem !important;
     }
 
     textarea::placeholder,
@@ -377,7 +421,12 @@ CUSTOM_CSS = """
         }
 
         .hero-title {
-            font-size: 1.65rem;
+            font-size: 1.75rem;
+        }
+
+        .day-inner {
+            padding-left: 8%;
+            padding-right: 8%;
         }
     }
 </style>
@@ -535,8 +584,8 @@ def render_hero(progress, goals):
     total = len(goals)
     st.markdown(
         f"""
-        <div class='hero-card'>
-            <div class='hero-eyebrow'>Weekly movement</div>
+        <div class='hero-card hero-card-v3'>
+            <div class='hero-eyebrow'>Weekly Movement</div>
             <div class='hero-title'>Track Your Week.</div>
             <div class='hero-subtitle'>A calm, phone-friendly planner for AM and PM movement, notes, and weekly goal progress.</div>
         </div>
@@ -544,13 +593,9 @@ def render_hero(progress, goals):
         unsafe_allow_html=True,
     )
 
-    c1, c2 = st.columns(2)
-    with c1:
-        st.metric("Goals completed", f"{complete}/{total}")
-    with c2:
-        sessions = sum(progress.values())
-        st.metric("Total counted sessions", sessions)
-
+    st.markdown("<div class='metric-wrap'>", unsafe_allow_html=True)
+    st.metric("Goals completed", f"{complete}/{total}")
+    st.markdown("</div>", unsafe_allow_html=True)
 
 
 def render_goal_cards(goals, progress):
@@ -600,10 +645,10 @@ def render_day_card(day, day_data, activity_options, today_only=False):
         unsafe_allow_html=True,
     )
 
-    # Remove the visual gap created by the markdown card shell.
-    st.markdown("<div style='margin-top:-5.1rem'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='margin-top:-5.0rem'></div>", unsafe_allow_html=True)
 
     with st.container(border=False):
+        st.markdown("<div class='day-inner'>", unsafe_allow_html=True)
         st.markdown("<div class='mini-chip'>Morning</div>", unsafe_allow_html=True)
         day_data["am_activity"] = st.selectbox(
             f"AM activity · {day}",
@@ -621,7 +666,7 @@ def render_day_card(day, day_data, activity_options, today_only=False):
             label_visibility="collapsed",
         )
 
-        st.markdown("<div style='height:0.35rem'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height:0.55rem'></div>", unsafe_allow_html=True)
         st.markdown("<div class='mini-chip'>Evening</div>", unsafe_allow_html=True)
         day_data["pm_activity"] = st.selectbox(
             f"PM activity · {day}",
@@ -638,7 +683,7 @@ def render_day_card(day, day_data, activity_options, today_only=False):
             height=88 if today_only else 78,
             label_visibility="collapsed",
         )
-
+        st.markdown("</div>", unsafe_allow_html=True)
 
 
 def render_today_view(data):
@@ -838,5 +883,5 @@ save_data(data)
 
 st.markdown("<div style='height:1rem'></div>", unsafe_allow_html=True)
 st.caption(
-    "Tip: this version stores data locally in a JSON file. Later, you can swap that layer for SQLite, Supabase, Firebase, or another database without changing the overall app structure much."
+    "Tip: this version stores data locally in a JSON file. Later, you can swap that layer for SQLite, Supabase, Firebase, or another database without changing the overall app structure much. Streamlit’s native selectbox does not currently support true tap-again-to-close behavior like a fully native mobile picker, so this version keeps the standard Streamlit dropdown behavior rather than adding a brittle workaround."
 )
