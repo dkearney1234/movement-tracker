@@ -161,47 +161,57 @@ CUSTOM_CSS = """
         margin: 1.1rem 0 0.7rem 0;
     }
 
+    .goal-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+        margin-bottom: 0.35rem;
+    }
+
     .goal-card {
-        background: linear-gradient(180deg, rgba(41, 40, 41, 0.98), rgba(19, 20, 21, 1));
+        background: linear-gradient(180deg, rgba(41, 40, 41, 0.96), rgba(19, 20, 21, 0.98));
         border: 1px solid var(--border);
-        border-radius: var(--radius-xl);
-        padding: 1rem;
+        border-radius: 18px;
+        padding: 0.8rem 0.85rem;
         box-shadow: var(--shadow);
-        margin-bottom: 0.85rem;
+        margin-bottom: 0;
+        min-height: 0;
     }
 
     .goal-card.complete {
         background:
-            radial-gradient(circle at top center, rgba(58, 175, 72, 0.16), transparent 48%),
-            linear-gradient(180deg, rgba(5, 70, 45, 0.94), rgba(19, 20, 21, 1));
-        border: 1px solid rgba(58, 175, 72, 0.24);
+            radial-gradient(circle at top center, rgba(58, 175, 72, 0.12), transparent 48%),
+            linear-gradient(180deg, rgba(5, 70, 45, 0.9), rgba(19, 20, 21, 0.98));
+        border: 1px solid rgba(58, 175, 72, 0.22);
         box-shadow: var(--glow);
     }
 
     .goal-top {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: space-between;
-        gap: 0.75rem;
-        margin-bottom: 0.6rem;
+        gap: 0.45rem;
+        margin-bottom: 0.45rem;
     }
 
     .goal-name {
-        font-size: 1.04rem;
+        font-size: 0.95rem;
         font-weight: 700;
         color: var(--text);
+        line-height: 1.15;
     }
 
     .goal-pill {
         display: inline-flex;
         align-items: center;
-        padding: 0.32rem 0.68rem;
+        padding: 0.22rem 0.5rem;
         border-radius: 999px;
-        font-size: 0.74rem;
+        font-size: 0.64rem;
         font-weight: 800;
         background: rgba(254, 255, 255, 0.06);
         color: rgba(254, 255, 255, 0.76);
         border: 1px solid rgba(254, 255, 255, 0.06);
+        white-space: nowrap;
     }
 
     .goal-pill.complete {
@@ -213,12 +223,12 @@ CUSTOM_CSS = """
     .goal-metrics {
         display: flex;
         align-items: baseline;
-        gap: 0.4rem;
-        margin-bottom: 0.45rem;
+        gap: 0.25rem;
+        margin-bottom: 0.2rem;
     }
 
     .goal-number {
-        font-size: 1.7rem;
+        font-size: 1.35rem;
         font-weight: 800;
         line-height: 1;
         color: var(--text);
@@ -226,13 +236,13 @@ CUSTOM_CSS = """
 
     .goal-target {
         color: rgba(254, 255, 255, 0.62);
-        font-size: 0.92rem;
+        font-size: 0.82rem;
     }
 
     .goal-caption {
         color: rgba(254, 255, 255, 0.7);
-        font-size: 0.86rem;
-        margin-top: 0.45rem;
+        font-size: 0.76rem;
+        margin-top: 0.22rem;
     }
 
     .planner-card {
@@ -391,21 +401,7 @@ CUSTOM_CSS = """
         color: var(--text) !important;
     }
 
-    div[data-testid="stProgressBar"] {
-        margin-top: -0.15rem;
-        margin-bottom: 1.05rem;
-    }
-
-    div[data-testid="stProgressBar"] > div {
-        background: rgba(254, 255, 255, 0.08) !important;
-        border-radius: 999px;
-    }
-
-    div[data-testid="stProgressBar"] > div > div {
-        border-radius: 999px;
-        height: 10px;
-        background: linear-gradient(90deg, #3aaf48, #74df82) !important;
-    }
+    
 
     .stButton > button,
     .stDownloadButton > button {
@@ -463,6 +459,25 @@ CUSTOM_CSS = """
 
     .day-inner {
         padding-top: 0.15rem;
+    }
+
+    @media (max-width: 640px) {
+        .goal-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.6rem;
+        }
+
+        .goal-card {
+            padding: 0.72rem 0.72rem;
+        }
+
+        .goal-name {
+            font-size: 0.88rem;
+        }
+
+        .goal-number {
+            font-size: 1.2rem;
+        }
     }
 
     textarea::placeholder,
@@ -764,15 +779,15 @@ def render_hero(progress, goals, week_entries):
 
 def render_goal_cards(goals, progress):
     st.markdown("<div class='section-label'>Weekly goals</div>", unsafe_allow_html=True)
+    cards = []
 
     for goal in goals:
         name = goal["name"]
         target = goal["target"]
         current = progress.get(name, 0)
-        pct = min(current / target, 1.0) if target else 0
         is_complete = current >= target
 
-        st.markdown(
+        cards.append(
             f"""
             <div class='goal-card {'complete' if is_complete else ''}'>
                 <div class='goal-top'>
@@ -785,10 +800,10 @@ def render_goal_cards(goals, progress):
                 </div>
                 <div class='goal-caption'>{goal_status_text(current, target)}</div>
             </div>
-            """,
-            unsafe_allow_html=True,
+            """
         )
-        st.progress(pct)
+
+    st.markdown(f"<div class='goal-grid'>{''.join(cards)}</div>", unsafe_allow_html=True)
 
 
 
@@ -842,7 +857,7 @@ def render_day_card(day, day_data, activity_options, today_only=False):
         unsafe_allow_html=True,
     )
 
-    st.markdown("<div style='margin-top:-0.35rem'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='margin-top:0rem'></div>", unsafe_allow_html=True)
 
     with st.container(border=False):
         st.markdown("<div class='day-inner'>", unsafe_allow_html=True)
