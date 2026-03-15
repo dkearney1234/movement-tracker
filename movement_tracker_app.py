@@ -944,7 +944,78 @@ def render_goal_cards(goals, progress):
             """
         )
 
-    st.markdown(f"<div class='goal-circles-wrap'>{''.join(circles)}</div>", unsafe_allow_html=True)
+    circles_html = f"""
+    <!doctype html>
+    <html>
+    <head>
+      <meta name='viewport' content='width=device-width, initial-scale=1' />
+      <style>
+        html, body {{
+          margin: 0;
+          padding: 0;
+          background: transparent;
+          overflow: hidden;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }}
+        .goal-circles-wrap {{
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          gap: 8px;
+          width: 100%;
+          box-sizing: border-box;
+          padding: 0 2px;
+        }}
+        .goal-circle-item {{
+          flex: 1 1 0;
+          min-width: 0;
+          text-align: center;
+        }}
+        .goal-circle-label {{
+          font-size: 11px;
+          line-height: 1.1;
+          font-weight: 700;
+          color: #feffff;
+          min-height: 28px;
+          margin-bottom: 6px;
+          display: flex;
+          align-items: flex-end;
+          justify-content: center;
+          text-align: center;
+          word-break: break-word;
+        }}
+        .goal-circle {{
+          width: 62px;
+          height: 62px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto;
+          box-shadow: 0 8px 18px rgba(0,0,0,0.28);
+          border: 1px solid rgba(254,255,255,0.08);
+        }}
+        .goal-circle-inner {{
+          width: 62px;
+          height: 62px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 13px;
+          font-weight: 800;
+          background: transparent;
+        }}
+      </style>
+    </head>
+    <body>
+      <div class='goal-circles-wrap'>
+        {''.join(circles)}
+      </div>
+    </body>
+    </html>
+    """
+    components.html(circles_html, height=104, scrolling=False)
 
 
 
