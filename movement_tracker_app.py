@@ -103,7 +103,8 @@ CUSTOM_CSS = """
         font-weight: 800;
         line-height: 1.06;
         margin-bottom: 0.45rem;
-        color: var(--text);
+        color: #3aaf48;
+        text-shadow: 0 0 18px rgba(58, 175, 72, 0.16);
     }
 
     .hero-subtitle {
@@ -207,27 +208,29 @@ CUSTOM_CSS = """
         border-radius: 26px;
         padding: 0.7rem 1.2rem;
         box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
-        margin-bottom: 1rem;
+        margin-top: 1.2rem;
+        margin-bottom: 0.45rem;
     }
 
     .planner-header {
         display: flex;
         justify-content: center;
         align-items: center;
-        margin-bottom: 0.2rem;
+        margin-bottom: 0rem;
         position: relative;
         min-height: 0;
-        padding: 0.25rem 0;
+        padding: 0.18rem 0;
     }
 
     .planner-day {
         font-size: 2.64rem;
         font-weight: 800;
-        color: var(--text);
+        color: #3aaf48;
         text-align: center;
         width: 100%;
         line-height: 1.02;
         letter-spacing: -0.02em;
+        text-shadow: 0 0 18px rgba(58, 175, 72, 0.14);
     }
 
     .planner-header .today-badge {
@@ -601,7 +604,7 @@ def render_hero(progress, goals):
         f"""
         <div class='hero-card hero-card-v3'>
             <div class='hero-eyebrow'>Weekly Movement</div>
-            <div class='hero-title'>Track Your Week.</div>
+            <div class='hero-title'>Track Your Week</div>
             <div class='hero-subtitle'>A calm, phone-friendly planner for AM and PM movement, notes, and weekly goal progress.</div>
         </div>
         """,
@@ -678,7 +681,7 @@ def render_day_card(day, day_data, activity_options, today_only=False):
         unsafe_allow_html=True,
     )
 
-    st.markdown("<div style='margin-top:-2.8rem'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='margin-top:-2.25rem'></div>", u
 
     with st.container(border=False):
         st.markdown("<div class='day-inner'>", unsafe_allow_html=True)
