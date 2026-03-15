@@ -161,20 +161,13 @@ CUSTOM_CSS = """
         margin: 1.1rem 0 0.7rem 0;
     }
 
-    .goal-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 0.75rem;
-        margin-bottom: 0.35rem;
-    }
-
     .goal-card {
         background: linear-gradient(180deg, rgba(41, 40, 41, 0.96), rgba(19, 20, 21, 0.98));
         border: 1px solid var(--border);
         border-radius: 18px;
         padding: 0.8rem 0.85rem;
         box-shadow: var(--shadow);
-        margin-bottom: 0;
+        margin-bottom: 0.75rem;
         min-height: 0;
     }
 
@@ -336,17 +329,18 @@ CUSTOM_CSS = """
     }
 
     .period-card {
-        background: linear-gradient(180deg, rgba(254, 255, 255, 0.035), rgba(254, 255, 255, 0.02));
-        border: 1px solid rgba(254, 255, 255, 0.07);
-        border-radius: 20px;
-        padding: 0.9rem 0.9rem 0.75rem 0.9rem;
-        margin-bottom: 0.8rem;
+        background: transparent;
+        border: none;
+        border-radius: 0;
+        padding: 0;
+        margin-bottom: 0;
+        box-shadow: none;
     }
 
     .period-card.complete {
-        background: linear-gradient(180deg, rgba(58, 175, 72, 0.09), rgba(254, 255, 255, 0.02));
-        border: 1px solid rgba(58, 175, 72, 0.16);
-        box-shadow: 0 8px 24px rgba(5, 70, 45, 0.16);
+        background: transparent;
+        border: none;
+        box-shadow: none;
     }
 
     .summary-card {
@@ -462,9 +456,24 @@ CUSTOM_CSS = """
     }
 
     @media (max-width: 640px) {
-        .goal-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 0.6rem;
+        .block-container {
+            padding-top: 5.8rem;
+            padding-left: 0.85rem;
+            padding-right: 0.85rem;
+        }
+
+        .hero-title {
+            font-size: 1.75rem;
+        }
+
+        .planner-day {
+            font-size: 2.0rem;
+        }
+
+        .day-inner {
+            padding-left: 8%;
+            padding-right: 8%;
+            padding-top: 0.15rem;
         }
 
         .goal-card {
@@ -779,31 +788,35 @@ def render_hero(progress, goals, week_entries):
 
 def render_goal_cards(goals, progress):
     st.markdown("<div class='section-label'>Weekly goals</div>", unsafe_allow_html=True)
-    cards = []
 
-    for goal in goals:
-        name = goal["name"]
-        target = goal["target"]
-        current = progress.get(name, 0)
-        is_complete = current >= target
-
-        cards.append(
-            f"""
-            <div class='goal-card {'complete' if is_complete else ''}'>
-                <div class='goal-top'>
-                    <div class='goal-name'>{name}</div>
-                    <div class='goal-pill {'complete' if is_complete else ''}'>{'Done' if is_complete else 'In progress'}</div>
-                </div>
-                <div class='goal-metrics'>
-                    <div class='goal-number'>{current}</div>
-                    <div class='goal-target'>/ {target}</div>
-                </div>
-                <div class='goal-caption'>{goal_status_text(current, target)}</div>
-            </div>
-            """
-        )
-
-    st.markdown(f"<div class='goal-grid'>{''.join(cards)}</div>", unsafe_allow_html=True)
+    rows = [goals[i:i+2] for i in range(0, len(goals), 2)]
+    for row in rows:
+        cols = st.columns(2, gap="small")
+        for idx, goal in enumerate(row):
+            with cols[idx]:
+                name = goal["name"]
+                target = goal["target"]
+                current = progress.get(name, 0)
+                is_complete = current >= target
+                st.markdown(
+                    f"""
+                    <div class='goal-card {'complete' if is_complete else ''}'>
+                        <div class='goal-top'>
+                            <div class='goal-name'>{name}</div>
+                            <div class='goal-pill {'complete' if is_complete else ''}'>{'Done' if is_complete else 'In progress'}</div>
+                        </div>
+                        <div class='goal-metrics'>
+                            <div class='goal-number'>{current}</div>
+                            <div class='goal-target'>/ {target}</div>
+                        </div>
+                        <div class='goal-caption'>{goal_status_text(current, target)}</div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
+        if len(row) == 1:
+            with cols[1]:
+                st.empty()
 
 
 
@@ -862,8 +875,6 @@ def render_day_card(day, day_data, activity_options, today_only=False):
     with st.container(border=False):
         st.markdown("<div class='day-inner'>", unsafe_allow_html=True)
 
-        am_complete_class = "period-card complete" if day_data.get("am_completed", False) else "period-card"
-        st.markdown(f"<div class='{am_complete_class}'>", unsafe_allow_html=True)
         day_data["am_activity"] = render_activity_chip_group(
             day,
             "Morning",
@@ -887,10 +898,9 @@ def render_day_card(day, day_data, activity_options, today_only=False):
                 height=88 if today_only else 78,
                 label_visibility="collapsed",
             )
-        st.markdown("</div>", unsafe_allow_html=True)
 
-        pm_complete_class = "period-card complete" if day_data.get("pm_completed", False) else "period-card"
-        st.markdown(f"<div class='{pm_complete_class}'>", unsafe_allow_html=True)
+        st.markdown("<div style='height:1rem'></div>", unsafe_allow_html=True)
+
         day_data["pm_activity"] = render_activity_chip_group(
             day,
             "Evening",
@@ -914,7 +924,6 @@ def render_day_card(day, day_data, activity_options, today_only=False):
                 height=88 if today_only else 78,
                 label_visibility="collapsed",
             )
-        st.markdown("</div>", unsafe_allow_html=True)
         st.markdown("</div>", unsafe_allow_html=True)
 
 
