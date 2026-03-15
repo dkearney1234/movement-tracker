@@ -156,7 +156,7 @@ CUSTOM_CSS = """
     .view-wrap {
         display: flex;
         justify-content: center;
-        margin: 0.1rem auto 0.65rem auto;
+        margin: -0.1rem auto 0.35rem auto;
         width: 100%;
     }
 
@@ -166,7 +166,7 @@ CUSTOM_CSS = """
         gap: 0.8rem;
         flex-wrap: nowrap;
         width: 100%;
-        margin: 0.05rem 0 0.3rem 0;
+        margin: -0.05rem 0 0.12rem 0;
         overflow-x: auto;
         overflow-y: hidden;
         padding-bottom: 0.15rem;
@@ -984,7 +984,7 @@ def render_goal_cards(goals, progress):
           position: relative;
           overflow: hidden;
           margin: 0 auto;
-          background: rgba(0,0,0,0.42);
+          background: rgba(0,0,0,0.22);
           box-shadow: 0 8px 18px rgba(0,0,0,0.28);
           border: 1px solid rgba(254,255,255,0.08);
         }}
@@ -1311,7 +1311,7 @@ render_hero(progress, data["goals"], data["week_entries"])
 
 # View switcher optimized for phones.
 st.markdown("<div class='view-wrap'>", unsafe_allow_html=True)
-_view_left, _view_center, _view_right = st.columns([1, 2, 1])
+_view_left, _view_center, _view_right = st.columns([1.2, 1.6, 1.2])
 with _view_center:
     view = st.segmented_control(
         "View",
