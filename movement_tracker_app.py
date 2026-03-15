@@ -510,7 +510,7 @@ CUSTOM_CSS = """
         width: 100%;
         border-radius: 16px;
         border: 1px solid rgba(254, 255, 255, 0.08);
-        min-height: 2.9rem;
+        min-height: 2.3rem;
         font-weight: 800;
         background: linear-gradient(180deg, rgba(41, 40, 41, 0.96), rgba(19, 20, 21, 1));
         color: var(--text);
@@ -1095,7 +1095,7 @@ def render_day_card(day, day_data, activity_options, today_only=False):
             f"{day}_am_completed",
             day_data.get("am_completed", False),
         )
-        am_notes_label = "Hide note" if day_data.get("am_note", "").strip() else "Add note"
+        am_notes_label = "Show note"
         with st.expander(am_notes_label, expanded=today_only and bool(day_data.get("am_note", "").strip())):
             day_data["am_note"] = st.text_area(
                 f"AM note · {day}",
@@ -1121,7 +1121,7 @@ def render_day_card(day, day_data, activity_options, today_only=False):
             f"{day}_pm_completed",
             day_data.get("pm_completed", False),
         )
-        pm_notes_label = "Hide note" if day_data.get("pm_note", "").strip() else "Add note"
+        pm_notes_label = "Show note"
         with st.expander(pm_notes_label, expanded=today_only and bool(day_data.get("pm_note", "").strip())):
             day_data["pm_note"] = st.text_area(
                 f"PM note · {day}",
@@ -1307,6 +1307,7 @@ for day in DAYS:
 
 progress = calculate_goal_progress(data["goals"], data["activity_catalog"], data["week_entries"])
 render_hero(progress, data["goals"], data["week_entries"])
+render_goal_cards(data["goals"], progress)
 
 # View switcher optimized for phones.
 if "view_mode" not in st.session_state:
@@ -1314,8 +1315,8 @@ if "view_mode" not in st.session_state:
 
 _view_outer_left, _view_outer_center, _view_outer_right = st.columns([1, 2, 1])
 with _view_outer_center:
-    st.markdown("<div style='text-align:center; color: rgba(254,255,255,0.9); font-size: 0.95rem; margin-bottom: 0.35rem;'>View</div>", unsafe_allow_html=True)
-    _toggle_pad_left, _today_col, _week_col, _toggle_pad_right = st.columns([1, 1.3, 1.3, 1])
+    st.markdown("<div style='text-align:center; color: rgba(254,255,255,0.9); font-size: 0.95rem; margin-bottom: 0.25rem;'>View</div>", unsafe_allow_html=True)
+    _toggle_pad_left, _today_col, _week_col, _toggle_pad_right = st.columns([1.2, 1.0, 1.0, 1.2])
     with _today_col:
         if st.button(
             "Today",
@@ -1334,8 +1335,6 @@ with _view_outer_center:
             st.session_state.view_mode = "Week"
 
 view = st.session_state.view_mode
-
-render_goal_cards(data["goals"], progress)
 
 if view == "Today":
     render_today_view(data)
