@@ -234,56 +234,6 @@ CUSTOM_CSS = """
     }
 
     .planner-header .today-badge {
-        position: absolute;
-        right: 0;
-        top: 50%;
-        transform: translateY(-50%);
-    }
-
-    .planner-date {
-        color: rgba(254, 255, 255, 0.62);
-        font-size: 0.88rem;
-    }
-
-    .day-inner {
-        padding-left: 20%;
-        padding-right: 20%;
-    }
-
-    .mini-chip {
-        display: inline-block;
-        font-size: 0.72rem;
-        font-weight: 800;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        color: rgba(254, 255, 255, 0.56);
-        margin-bottom: 0.5rem;
-    }
-
-    .summary-card {
-        background: linear-gradient(180deg, rgba(41, 40, 41, 0.96), rgba(19, 20, 21, 0.98));
-        border: 1px solid var(--border);
-        border-radius: 24px;
-        padding: 1rem;
-        box-shadow: var(--shadow);
-        margin-top: 0.8rem;
-    }
-
-    .summary-line {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.55rem 0;
-        border-bottom: 1px solid rgba(254, 255, 255, 0.06);
-        font-size: 0.95rem;
-        color: var(--text);
-    }
-
-    .summary-line:last-child {
-        border-bottom: none;
-    }
-
-    .today-badge {
         display: inline-flex;
         align-items: center;
         gap: 0.35rem;
@@ -294,6 +244,26 @@ CUSTOM_CSS = """
         border: 1px solid rgba(58, 175, 72, 0.18);
         font-size: 0.75rem;
         font-weight: 800;
+    }
+
+    .completion-pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.34rem 0.7rem;
+        border-radius: 999px;
+        background: rgba(254, 255, 255, 0.05);
+        color: rgba(254, 255, 255, 0.72);
+        border: 1px solid rgba(254, 255, 255, 0.08);
+        font-size: 0.76rem;
+        font-weight: 800;
+        margin: 0.35rem 0 0.5rem 0;
+    }
+
+    .completion-pill.complete {
+        background: rgba(58, 175, 72, 0.16);
+        color: #8ef6a0;
+        border: 1px solid rgba(58, 175, 72, 0.2);
     }
 
     div[data-testid="stMetric"] {
@@ -360,6 +330,20 @@ CUSTOM_CSS = """
     .stTextArea textarea {
         padding-left: 0.95rem !important;
         padding-right: 0.95rem !important;
+    }
+
+    div[data-testid="stCheckbox"] {
+        margin-top: 0.35rem;
+        margin-bottom: 0.15rem;
+    }
+
+    div[data-testid="stCheckbox"] label {
+        color: rgba(254, 255, 255, 0.86) !important;
+        font-weight: 700 !important;
+    }
+
+    div[data-testid="stCheckbox"] input {
+        accent-color: #3aaf48;
     }
 
     textarea::placeholder,
@@ -492,30 +476,37 @@ def build_default_state():
         day: {
             "am_activity": "Rest",
             "am_note": "",
+            "am_completed": False,
             "pm_activity": "Rest",
             "pm_note": "",
+            "pm_completed": False,
         }
         for day in DAYS
     }
 
-    # Sample data to make the app feel alive immediately.
     week_entries["Monday"] = {
         "am_activity": "Kickboxing",
         "am_note": "Bag work + footwork",
+        "am_completed": True,
         "pm_activity": "Yoga",
         "pm_note": "10 min stretch before bed",
+        "pm_completed": False,
     }
     week_entries["Tuesday"] = {
         "am_activity": "Strength",
         "am_note": "Lower body",
+        "am_completed": False,
         "pm_activity": "Rest",
         "pm_note": "",
+        "pm_completed": False,
     }
     week_entries["Wednesday"] = {
         "am_activity": "Run",
         "am_note": "Easy pace",
+        "am_completed": True,
         "pm_activity": "Skill",
         "pm_note": "Shadowboxing drills",
+        "pm_completed": True,
     }
 
     return {
@@ -533,15 +524,22 @@ def load_data():
         try:
             with open(DATA_FILE, "r", encoding="utf-8") as f:
                 saved = json.load(f)
-            # Merge lightly with defaults to protect against missing keys.
             default = build_default_state()
             default.update(saved)
             for day in DAYS:
                 if day not in default["week_entries"]:
                     default["week_entries"][day] = build_default_state()["week_entries"][day]
+                day_entry = default["week_entries"][day]
+                day_entry.setdefault("am_activity", "Rest")
+                day_entry.setdefault("am_note", "")
+                day_entry.setdefault("am_completed", False)
+                day_entry.setdefault("pm_activity", "Rest")
+                day_entry.setdefault("pm_note", "")
+                day_entry.setdefault("pm_completed", False)
             return default
         except Exception:
             return build_default_state()
+    return build_default_state()
     return build_default_state()
 
 
@@ -567,8 +565,10 @@ def calculate_goal_progress(goals, activity_catalog, week_entries):
     progress = {goal["name"]: 0 for goal in goals}
 
     for day_data in week_entries.values():
-        for time_of_day in ["am_activity", "pm_activity"]:
-            activity = day_data.get(time_of_day, "Rest")
+        for activity_key, complete_key in [("am_activity", "am_completed"), ("pm_activity", "pm_completed")]:
+            if not day_data.get(complete_key, False):
+                continue
+            activity = day_data.get(activity_key, "Rest")
             mapping = activity_catalog.get(activity, {})
             for goal_name, increment in mapping.items():
                 if goal_name in progress:
@@ -649,9 +649,6 @@ def render_goal_cards(goals, progress):
 def render_activity_chip_group(day, period_label, key_name, current_value, activity_options):
     st.markdown(f"<div class='mini-chip'>{period_label}</div>", unsafe_allow_html=True)
 
-    # Streamlit does not offer fully custom CSS-targetable pill chips with arbitrary styling
-    # and state behavior the way a native app would. segmented_control is the cleanest,
-    # most stable built-in alternative for fast one-tap selection.
     selected = st.segmented_control(
         f"{period_label} activity · {day}",
         options=activity_options,
@@ -661,6 +658,19 @@ def render_activity_chip_group(day, period_label, key_name, current_value, activ
         label_visibility="collapsed",
     )
     return selected
+
+
+
+def render_completion_toggle(day, label, key_name, current_value):
+    value = st.checkbox(
+        f"Done · {label} · {day}",
+        value=bool(current_value),
+        key=key_name,
+    )
+    status = "Completed" if value else "Planned"
+    cls = "completion-pill complete" if value else "completion-pill"
+    st.markdown(f"<div class='{cls}'>{status}</div>", unsafe_allow_html=True)
+    return value
 
 
 
@@ -693,6 +703,12 @@ def render_day_card(day, day_data, activity_options, today_only=False):
             day_data.get("am_activity", activity_options[0]),
             activity_options,
         )
+        day_data["am_completed"] = render_completion_toggle(
+            day,
+            "Morning",
+            f"{day}_am_completed",
+            day_data.get("am_completed", False),
+        )
         day_data["am_note"] = st.text_area(
             f"AM note · {day}",
             value=day_data.get("am_note", ""),
@@ -710,6 +726,12 @@ def render_day_card(day, day_data, activity_options, today_only=False):
             f"{day}_pm_activity",
             day_data.get("pm_activity", activity_options[0]),
             activity_options,
+        )
+        day_data["pm_completed"] = render_completion_toggle(
+            day,
+            "Evening",
+            f"{day}_pm_completed",
+            day_data.get("pm_completed", False),
         )
         day_data["pm_note"] = st.text_area(
             f"PM note · {day}",
@@ -759,7 +781,9 @@ def render_summary(goals, progress):
 
 def render_settings(data):
     with st.expander("Edit goals and activity settings", expanded=False):
-        st.caption("Update weekly goals, activity names, and how each activity counts toward each goal.")
+        st.caption(
+    "Tip: this version stores data locally in a JSON file. Later, you can swap that layer for SQLite, Supabase, Firebase, or another database without changing the overall app structure much. In this version, activities are planned first and only count toward goals after they are explicitly marked complete."
+)
 
         st.subheader("Weekly goals")
         for idx, goal in enumerate(data["goals"]):
