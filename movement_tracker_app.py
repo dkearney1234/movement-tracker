@@ -154,9 +154,8 @@ CUSTOM_CSS = """
     }
 
     .view-wrap {
-        display: flex;
-        justify-content: center;
-        margin: -0.1rem auto 0.35rem auto;
+        display: block;
+        margin: 0;
         width: 100%;
     }
 
@@ -1310,16 +1309,18 @@ progress = calculate_goal_progress(data["goals"], data["activity_catalog"], data
 render_hero(progress, data["goals"], data["week_entries"])
 
 # View switcher optimized for phones.
-st.markdown("<div class='view-wrap'>", unsafe_allow_html=True)
-_view_left, _view_center, _view_right = st.columns([1, 3, 1])
-with _view_center:
-    view = st.segmented_control(
-        "View",
-        options=["Today", "Week"],
-        default="Today",
-        selection_mode="single",
-    )
-st.markdown("</div>", unsafe_allow_html=True)
+_view_outer_left, _view_outer_center, _view_outer_right = st.columns([1, 2, 1])
+with _view_outer_center:
+    st.markdown("<div style='text-align:center; color: rgba(254,255,255,0.9); font-size: 0.95rem; margin-bottom: 0.35rem;'>View</div>", unsafe_allow_html=True)
+    _view_inner_left, _view_inner_center, _view_inner_right = st.columns([1, 3, 1])
+    with _view_inner_center:
+        view = st.segmented_control(
+            "View",
+            options=["Today", "Week"],
+            default="Today",
+            selection_mode="single",
+            label_visibility="collapsed",
+        )
 
 render_goal_cards(data["goals"], progress)
 
