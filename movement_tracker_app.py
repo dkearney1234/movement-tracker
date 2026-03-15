@@ -117,8 +117,7 @@ CUSTOM_CSS = """
     }
 
     .metric-wrap {
-        margin: 0.55rem auto 0.8rem auto;
-        max-width: 260px;
+        display: none;
     }
 
     .hero-stats-row {
@@ -157,17 +156,17 @@ CUSTOM_CSS = """
     .view-wrap {
         display: flex;
         justify-content: center;
-        margin: 0.35rem auto 0.9rem auto;
+        margin: 0.1rem auto 0.65rem auto;
         width: 100%;
     }
 
     .goal-circles-wrap {
         display: flex;
-        justify-content: center;
+        justify-content: space-between;
         gap: 0.8rem;
         flex-wrap: nowrap;
         width: 100%;
-        margin: 0.15rem 0 0.55rem 0;
+        margin: 0.05rem 0 0.3rem 0;
         overflow-x: auto;
         overflow-y: hidden;
         padding-bottom: 0.15rem;
@@ -494,12 +493,7 @@ CUSTOM_CSS = """
     }
 
     div[data-testid="stMetric"] {
-        background: linear-gradient(180deg, rgba(41, 40, 41, 0.98), rgba(19, 20, 21, 1));
-        border: 1px solid var(--border);
-        border-radius: 18px;
-        padding: 0.55rem 0.8rem;
-        box-shadow: var(--shadow);
-        text-align: center;
+        display: none;
     }
 
     div[data-testid="stMetric"] label,
@@ -890,8 +884,6 @@ def goal_status_text(current, target):
 
 
 def render_hero(progress, goals, week_entries):
-    complete = completion_count(goals, progress)
-    total = len(goals)
     planned, completed = planned_and_completed_session_counts(week_entries)
 
     st.markdown(
@@ -911,9 +903,6 @@ def render_hero(progress, goals, week_entries):
         unsafe_allow_html=True,
     )
 
-    st.markdown("<div class='metric-wrap'>", unsafe_allow_html=True)
-    st.metric("Goals completed", f"{complete}/{total}")
-    st.markdown("</div>", unsafe_allow_html=True)
 
 
 def render_goal_cards(goals, progress):
@@ -939,7 +928,7 @@ def render_goal_cards(goals, progress):
             <div class='goal-circle-item'>
                 <div class='goal-circle-label'>{label}</div>
                 <div class='goal-liquid-circle'>
-                    <div class='goal-liquid-fill' style='height: {pct}%;'>
+                    <div class='goal-liquid-fill' style='height: {pct}%; opacity: {0 if current == 0 else 1};'>
                         <div class='goal-liquid-wave' style='height: {wave_height}px;'></div>
                     </div>
                     <div class='goal-circle-inner' style='color: {text_color};'>{current}/{goal['target']}</div>
@@ -995,7 +984,7 @@ def render_goal_cards(goals, progress):
           position: relative;
           overflow: hidden;
           margin: 0 auto;
-          background: rgba(0,0,0,0.88);
+          background: rgba(0,0,0,0.42);
           box-shadow: 0 8px 18px rgba(0,0,0,0.28);
           border: 1px solid rgba(254,255,255,0.08);
         }}
